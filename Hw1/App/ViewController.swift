@@ -6,51 +6,42 @@
 //
 
 import UIKit
-
+import WebKit
 class ViewController: UIViewController {
     let fromLoginToTabBar = "fromLoginToTabBar"
 
-    @IBOutlet weak var myButton: UIButton!
-    @IBOutlet weak var login: UITextField!
-    @IBOutlet weak var password: UITextField!
-    
+
+    @IBOutlet weak var WkWebView: WKWebView!{
+        didSet{
+            WkWebView.navigationDelegate = self
+        }
+    }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        var urlComponents = URLComponents()
+                urlComponents.scheme = "https"
+                urlComponents.host = "oauth.vk.com"
+                urlComponents.path = "/authorize"
+                urlComponents.queryItems = [
+                    URLQueryItem(name: "client_id", value: "7033153"),
+                    URLQueryItem(name: "display", value: "mobile"),
+                    URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
+                    URLQueryItem(name: "scope", value: "262150"),
+                    URLQueryItem(name: "response_type", value: "token"),
+                    URLQueryItem(name: "v", value: "5.103")
+                ]
+                
+                let request = URLRequest(url: urlComponents.url!)
+                
+                WkWebView.load(request)
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        myButton.layer.cornerRadius = 3
 
-        
-        UITextField.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.login.frame.origin.x -= 200
-        },
-            completion: { _ in
-                UITextField.animate(withDuration: 0.3, delay: 0, animations: {
-                    self.login.alpha = 0.3
-                },completion: {_ in
-                    UITextField.animate(withDuration: 0.3, delay: 0, animations: {
-                        self.login.alpha = 1
-                    })
-                })
-            })
-        UITextField.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0, options: .curveEaseInOut, animations: {
-            self.password.frame.origin.x += 200
-        },
-            completion: {_ in
-                UITextField.animate(withDuration: 0.3, delay: 0, animations: {
-                    self.password.alpha = 0.3
-                },completion: {_ in
-                    UITextField.animate(withDuration: 0.3, delay: 0, animations: {
-                        self.password.alpha = 1
-                    })
-                })
-            })
-       
-
-        
     }
     func fillUsers(){
+        //VkApi().VKgetFriends()
         DataStorage.shared.favoriteGroupsArray.append(Group(name: "Sandbox", description: "Humor", mainPhoto: UIImage(named: "cat"), id: 3454353))
                                                       
         DataStorage.shared.favoriteGroupsArray.append(Group(name: "MDK", description: "Bored content", mainPhoto: nil, id: 31245))
@@ -61,12 +52,12 @@ class ViewController: UIViewController {
         
         
         
-        DataStorage.shared.friendsArray.append(User(name: "Alex", mainPhoto: UIImage(named: "skull"), photoArray: [UIImage(named: "croc")!], likes: 0, id: 1000))
-        DataStorage.shared.friendsArray.append(User(name: "Kirill",mainPhoto: nil, photoArray: [UIImage(named: "croc")!], likes: 0, id: 1234))
-        DataStorage.shared.friendsArray.append(User(name: "Egor", mainPhoto: UIImage(named: "bird"), photoArray: [UIImage(named: "croc")!], likes: 0, id: 20))
-        DataStorage.shared.friendsArray.append(User(name: "Oleg", mainPhoto: UIImage(named: "puma"), photoArray: [UIImage(named: "croc")!], likes: 0, id: 3223))
-        DataStorage.shared.friendsArray.append(User(name: "Evgeny", mainPhoto: UIImage(named: "catbiker"), photoArray: [UIImage(named: "croc")!], likes: 0, id: 4346))
-        
+//        DataStorage.shared.friendsArray.append(User(name: "Alex", mainPhoto: UIImage(named: "skull"), photoArray: [UIImage(named: "croc")!], likes: 0, id: 1000))
+//        DataStorage.shared.friendsArray.append(User(name: "Kirill",mainPhoto: nil, photoArray: [UIImage(named: "croc")!], likes: 0, id: 1234))
+//        DataStorage.shared.friendsArray.append(User(name: "Egor", mainPhoto: UIImage(named: "bird"), photoArray: [UIImage(named: "croc")!], likes: 0, id: 20))
+//        DataStorage.shared.friendsArray.append(User(name: "Oleg", mainPhoto: UIImage(named: "puma"), photoArray: [UIImage(named: "croc")!], likes: 0, id: 3223))
+//        DataStorage.shared.friendsArray.append(User(name: "Evgeny", mainPhoto: UIImage(named: "catbiker"), photoArray: [UIImage(named: "croc")!], likes: 0, id: 4346))
+//        
         
         DataStorage.shared.newsArray.append(News(mainImage: UIImage(named: "skull"), text: "", avatar: UIImage(named: "bird")!, views: "10K", name: "Evgeny", date: "Вчера в 10:20"))
         DataStorage.shared.newsArray.append(News(mainImage: UIImage(named: "bird"), text: "И вот я опять", avatar: UIImage(named: "bird")!, views: "100K", name: "Evgeny", date: "Вчера в 10:22"))
@@ -75,59 +66,42 @@ class ViewController: UIViewController {
         
 
     }
-    func showAlert(text: String){
-        let alertCon = UIAlertController(title:"Message" , message: text, preferredStyle: UIAlertController.Style.alert)
-        let actionBut = UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: {_ in self.login.text = ""
-            self.password.text = ""
-        })
-        alertCon.addAction(actionBut)
-        present(alertCon, animated: true, completion: nil)
-    }
-    
-    @IBAction func PressBut(_ sender: Any) {
-        guard let MLogin = self.login.text else{
-            showAlert(text: "ERROR")
-            return
-        }
-        guard let MPass = self.password.text else{
-            showAlert(text: "ERROR")
-            return
-        }
-        if(MPass == "123" && MLogin == "Admin"){
-            
-            fillUsers()
-            self.showSpinner()
-            Timer.scheduledTimer(withTimeInterval: 3, repeats: false, block: {(t) in
-                self.removeSpinner()
-                self.performSegue(withIdentifier: self.fromLoginToTabBar, sender: self)
-            })
-            
-        }
-        else{
-            showAlert(text: "Incorrect login or pass")
-        }
-    }
+
     
 
 }
-fileprivate var aView: UIView?
-extension UIViewController {
-    
-    func showSpinner() {
-        aView = UIView(frame: self.view.bounds)
-        aView?.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
-        let ai = UIActivityIndicatorView(style: .large)
-        ai.center = aView!.center
-        ai.startAnimating()
-
-        aView?.addSubview(ai)
-        self.view.addSubview(aView!)
+extension ViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        
+        guard let url = navigationResponse.response.url, url.path == "/blank.html", let fragment = url.fragment  else {
+            decisionHandler(.allow)
+            return
+        }
+        
+        let params = fragment
+            .components(separatedBy: "&")
+            .map { $0.components(separatedBy: "=") }
+            .reduce([String: String]()) { result, param in
+                var dict = result
+                let key = param[0]
+                let value = param[1]
+                dict[key] = value
+                return dict
+        }
+        
+        let token = params["access_token"]
+        
+        Session.shared.token = token ?? ""
         
         
+        decisionHandler(.cancel)
+        fillUsers()
+        self.performSegue(withIdentifier: self.fromLoginToTabBar, sender: self)
+//        VkService().VKgetFriends()
+//        VkService().VKgetPhotos()
+//        VkService().VKgetGroups()
+//        VkService().VKgetGroupsSearch(text: "MDK")
     }
     
-    func removeSpinner(){
-        aView!.removeFromSuperview()
-        aView = nil
-    }
 }
+    

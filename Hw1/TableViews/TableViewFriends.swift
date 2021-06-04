@@ -8,13 +8,14 @@
 import UIKit
 
 class TableViewFriends: UIViewController, UISearchBarDelegate {
-
+    
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var myTableView: UITableView!
     var photo = UIImage(named: "unnamed")!
     var row = Int()
     var type = "Friends"
     var filteredArray = DataStorage.shared.friendsArray
+    var refreshControl = UIRefreshControl()
     override func viewWillAppear(_ animated: Bool) {
         filteredArray = []
         if searchBar.text == "" {
@@ -45,26 +46,34 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
         filteredArray.sort { (lhs: User, rhs: User) -> Bool in
             return lhs.name < rhs.name
         }
-
+        
         var friends = [String]()
         for item in filteredArray{
             friends.append(item.name)
         }
         let sections = Dictionary(grouping: friends) { (country) -> Character in
             return country.first!
-            }
-            .map { (key: Character, value: [String]) -> (letter: Character, names: [String]) in
-                (letter: key, names: value)
-            }
-            .sorted { (left, right) -> Bool in
-                left.letter < right.letter
-            }
+        }
+        .map { (key: Character, value: [String]) -> (letter: Character, names: [String]) in
+            (letter: key, names: value)
+        }
+        .sorted { (left, right) -> Bool in
+            left.letter < right.letter
+        }
         return sections
     }
-
     
-    
+    //    @objc func refresh() {
+    //
+    //       self.myTableView.reloadData() // a refresh the tableView.
+    //
+    //   }
+    //
     override func viewDidLoad() {
+        DispatchQueue.main.async{
+        VkApi().VKgetFriends()
+        }
+        print(DataStorage.shared.friendsArray)
         filteredArray = []
         if searchBar.text == "" {
             filteredArray = DataStorage.shared.friendsArray
@@ -79,15 +88,28 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
         super.viewDidLoad()
         searchBar.delegate = self
         myTableView.dataSource = self
+        myTableView.delegate = self
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        myTableView.addSubview(refreshControl) // not required when using UITableViewController
+
+    
+        filteredArray = DataStorage.shared.friendsArray
+
         
         let nibFile = UINib(nibName: "CustomTableViewCell", bundle: nil)
         
         myTableView.register(nibFile, forCellReuseIdentifier: "CustomTableViewCell")
         myTableView.reloadData()
-
+        
     }
+    @objc func refresh(_ sender: AnyObject) {
 
+        self.myTableView.reloadData()
 
+        refreshControl.endRefreshing()
+    }
+    
 }
 extension TableViewFriends: UITableViewDataSource{
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -123,7 +145,7 @@ extension TableViewFriends: UITableViewDataSource{
         let sections = sortAndGetSections()
         var i = 0
         var iStruct = 0
-
+        
         for (_,names) in sections{
             if i == indexPath.section{
                 break
@@ -146,7 +168,7 @@ extension TableViewFriends: UITableViewDataSource{
         let sections = sortAndGetSections()
         var i = 0
         var iStruct = 0
-
+        
         for (_,names) in sections{
             if i == indexPath.section{
                 break
@@ -183,12 +205,12 @@ extension TableViewFriends: UITableViewDataSource{
     }
 }
 extension TableViewFriends: UITableViewDelegate{
-
+    
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let sections = sortAndGetSections()
         var i = 0
         var iStruct = 0
-
+        
         for (_,names) in sections{
             if i == indexPath.section{
                 break
@@ -221,9 +243,9 @@ extension TableViewFriends: UITableViewDelegate{
             }
         }
         let swipeActions = UISwipeActionsConfiguration(actions: [contextItem])
-
+        
         return swipeActions
     }
-
-
+    
+    
 }
