@@ -13,6 +13,7 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
     var filteredArray = DataStorage.shared.favoriteGroupsArray
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var myTableView: UITableView!
+    var refreshControl = UIRefreshControl()
     override func viewWillAppear(_ animated: Bool) {
         filteredArray = []
         if searchBar.text == "" {
@@ -63,13 +64,56 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
         super.viewDidLoad()
         searchBar.delegate = self
         myTableView.dataSource = self
+        myTableView.delegate = self
+        self.showSpinner()
+        VkApi().VKgetGroups (finished: {
+            
+            self.filteredArray = []
+            if self.searchBar.text == "" {
+                self.filteredArray = DataStorage.shared.favoriteGroupsArray
+            }
+            else {
+                for item in DataStorage.shared.favoriteGroupsArray {
+                    if item.name.lowercased().contains(self.searchBar.text?.lowercased() ??  ""){
+                        self.filteredArray.append(item)
+                    }
+                }
+            }
+            self.myTableView.reloadData()
+            self.removeSpinner()
+        })
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        myTableView.addSubview(refreshControl) // not required when using UITableViewController
         
         let nibFile = UINib(nibName: "CustomTableViewCell", bundle: nil)
         
         myTableView.register(nibFile, forCellReuseIdentifier: "CustomTableViewCell")
         myTableView.reloadData()
     }
-    
+    @objc func refresh(_ sender: AnyObject) {
+        self.showSpinner()
+        VkApi().VKgetGroups (finished: {
+            
+            self.filteredArray = []
+            if self.searchBar.text == "" {
+                self.filteredArray = DataStorage.shared.favoriteGroupsArray
+            }
+            else {
+                for item in DataStorage.shared.favoriteGroupsArray{
+                    if item.name.lowercased().contains(self.searchBar.text?.lowercased() ??  ""){
+                        self.filteredArray.append(item)
+                    }
+                }
+            }
+            
+
+            self.myTableView.reloadData()
+            self.removeSpinner()
+        })
+
+        refreshControl.endRefreshing()
+    }
     
 }
 extension TableViewFavoriteGroups: UITableViewDataSource {
@@ -191,3 +235,24 @@ extension TableViewFavoriteGroups: UITableViewDelegate{
 }
 
 
+fileprivate var aView: UIView?
+extension TableViewFavoriteGroups {
+    
+    func showSpinner() {
+        aView = UIView(frame: self.view.bounds)
+        aView?.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+        let ai = UIActivityIndicatorView(style: .large)
+        ai.center = aView!.center
+        ai.startAnimating()
+
+        aView?.addSubview(ai)
+        self.view.addSubview(aView!)
+        
+        
+    }
+    
+    func removeSpinner(){
+        aView!.removeFromSuperview()
+        aView = nil
+    }
+}

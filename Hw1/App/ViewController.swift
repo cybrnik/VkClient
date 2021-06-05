@@ -42,15 +42,15 @@ class ViewController: UIViewController {
     }
     func fillUsers(){
         //VkApi().VKgetFriends()
-        DataStorage.shared.favoriteGroupsArray.append(Group(name: "Sandbox", description: "Humor", mainPhoto: UIImage(named: "cat"), id: 3454353))
-                                                      
-        DataStorage.shared.favoriteGroupsArray.append(Group(name: "MDK", description: "Bored content", mainPhoto: nil, id: 31245))
-                                                      
-        DataStorage.shared.favoriteGroupsArray.append(Group(name: "Reddit", description: "Memes", mainPhoto: UIImage(named: "man"), id: 12312))
-                                                      
-        DataStorage.shared.groupsArray.append(Group(name: "SandboxYUMSH", description: "Omagaseble humor", mainPhoto: UIImage(named: "croc"), id: 1000))
-        
-        
+//        DataStorage.shared.favoriteGroupsArray.append(Group(name: "Sandbox", description: "Humor", mainPhoto: UIImage(named: "cat"), id: 3454353))
+//                                                      
+//        DataStorage.shared.favoriteGroupsArray.append(Group(name: "MDK", description: "Bored content", mainPhoto: nil, id: 31245))
+//                                                      
+//        DataStorage.shared.favoriteGroupsArray.append(Group(name: "Reddit", description: "Memes", mainPhoto: UIImage(named: "man"), id: 12312))
+//                                                      
+//        DataStorage.shared.groupsArray.append(Group(name: "SandboxYUMSH", description: "Omagaseble humor", mainPhoto: UIImage(named: "croc"), id: 1000))
+//        
+//        
         
 //        DataStorage.shared.friendsArray.append(User(name: "Alex", mainPhoto: UIImage(named: "skull"), photoArray: [UIImage(named: "croc")!], likes: 0, id: 1000))
 //        DataStorage.shared.friendsArray.append(User(name: "Kirill",mainPhoto: nil, photoArray: [UIImage(named: "croc")!], likes: 0, id: 1234))

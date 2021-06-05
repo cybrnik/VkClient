@@ -70,10 +70,9 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
     //   }
     //
     override func viewDidLoad() {
-        DispatchQueue.main.async{
-        VkApi().VKgetFriends()
-        }
-        print(DataStorage.shared.friendsArray)
+
+
+
         filteredArray = []
         if searchBar.text == "" {
             filteredArray = DataStorage.shared.friendsArray
@@ -89,12 +88,29 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
         searchBar.delegate = self
         myTableView.dataSource = self
         myTableView.delegate = self
+        self.showSpinner()
+        VkApi().VKgetFriends(finished: {
+            
+            self.filteredArray = []
+            if self.searchBar.text == "" {
+                self.filteredArray = DataStorage.shared.friendsArray
+            }
+            else {
+                for item in DataStorage.shared.friendsArray{
+                    if item.name.lowercased().contains(self.searchBar.text?.lowercased() ??  ""){
+                        self.filteredArray.append(item)
+                    }
+                }
+            }
+            self.myTableView.reloadData()
+            self.removeSpinner()
+        })
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
         myTableView.addSubview(refreshControl) // not required when using UITableViewController
 
     
-        filteredArray = DataStorage.shared.friendsArray
+        
 
         
         let nibFile = UINib(nibName: "CustomTableViewCell", bundle: nil)
@@ -102,10 +118,29 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
         myTableView.register(nibFile, forCellReuseIdentifier: "CustomTableViewCell")
         myTableView.reloadData()
         
+        
+        
     }
     @objc func refresh(_ sender: AnyObject) {
+        self.showSpinner()
+        VkApi().VKgetFriends(finished: {
+            
+            self.filteredArray = []
+            if self.searchBar.text == "" {
+                self.filteredArray = DataStorage.shared.friendsArray
+            }
+            else {
+                for item in DataStorage.shared.friendsArray{
+                    if item.name.lowercased().contains(self.searchBar.text?.lowercased() ??  ""){
+                        self.filteredArray.append(item)
+                    }
+                }
+            }
+            
 
-        self.myTableView.reloadData()
+            self.myTableView.reloadData()
+            self.removeSpinner()
+        })
 
         refreshControl.endRefreshing()
     }
@@ -248,4 +283,25 @@ extension TableViewFriends: UITableViewDelegate{
     }
     
     
+}
+fileprivate var aView: UIView?
+extension TableViewFriends {
+    
+    func showSpinner() {
+        aView = UIView(frame: self.view.bounds)
+        aView?.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+        let ai = UIActivityIndicatorView(style: .large)
+        ai.center = aView!.center
+        ai.startAnimating()
+
+        aView?.addSubview(ai)
+        self.view.addSubview(aView!)
+        
+        
+    }
+    
+    func removeSpinner(){
+        aView!.removeFromSuperview()
+        aView = nil
+    }
 }
