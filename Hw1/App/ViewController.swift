@@ -27,7 +27,7 @@ class ViewController: UIViewController {
                     URLQueryItem(name: "client_id", value: "7033153"),
                     URLQueryItem(name: "display", value: "mobile"),
                     URLQueryItem(name: "redirect_uri", value: "https://oauth.vk.com/blank.html"),
-                    URLQueryItem(name: "scope", value: "262150"),
+                    URLQueryItem(name: "scope", value: "photos,offline,friends,wall"),
                     URLQueryItem(name: "response_type", value: "token"),
                     URLQueryItem(name: "v", value: "5.103")
                 ]
@@ -59,9 +59,9 @@ class ViewController: UIViewController {
 //        DataStorage.shared.friendsArray.append(User(name: "Evgeny", mainPhoto: UIImage(named: "catbiker"), photoArray: [UIImage(named: "croc")!], likes: 0, id: 4346))
 //        
         
-        DataStorage.shared.newsArray.append(News(mainImage: UIImage(named: "skull"), text: "", avatar: UIImage(named: "bird")!, views: "10K", name: "Evgeny", date: "Вчера в 10:20"))
-        DataStorage.shared.newsArray.append(News(mainImage: UIImage(named: "bird"), text: "И вот я опять", avatar: UIImage(named: "bird")!, views: "100K", name: "Evgeny", date: "Вчера в 10:22"))
-        DataStorage.shared.newsArray.append(News(text: "Google Messages получил редизайн в стиле One UI на последних флагманах Samsung\n\nПо сообщению XDA Developers, приложение Google Messages на устройствах Samsung Galaxy S21 претерпевает редизайн, и его внешний вид будет соответствовать другому программному обеспечению One UI от Samsung. Скриншоты, опубликованные XDA и пользователями Reddit, показывают, что главный экран приложения разделен на две части: верхняя информационная область со счетчиком непрочитанных сообщений и нижняя часть со ссылками на каждую беседу.", avatar: UIImage(named: "simp")!, views: "200K", name: "Oleg", date: "Вчера в 10:30"))
+//        DataStorage.shared.newsArray.append(News(mainImage: UIImage(named: "skull"), text: "", avatar: UIImage(named: "bird")!, views: "10K", name: "Evgeny", date: "Вчера в 10:20"))
+//        DataStorage.shared.newsArray.append(News(mainImage: UIImage(named: "bird"), text: "И вот я опять", avatar: UIImage(named: "bird")!, views: "100K", name: "Evgeny", date: "Вчера в 10:22"))
+//        DataStorage.shared.newsArray.append(News(text: "Google Messages получил редизайн в стиле One UI на последних флагманах Samsung\n\nПо сообщению XDA Developers, приложение Google Messages на устройствах Samsung Galaxy S21 претерпевает редизайн, и его внешний вид будет соответствовать другому программному обеспечению One UI от Samsung. Скриншоты, опубликованные XDA и пользователями Reddit, показывают, что главный экран приложения разделен на две части: верхняя информационная область со счетчиком непрочитанных сообщений и нижняя часть со ссылками на каждую беседу.", avatar: UIImage(named: "simp")!, views: "200K", name: "Oleg", date: "Вчера в 10:30"))
 
         
 

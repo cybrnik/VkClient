@@ -11,7 +11,7 @@ struct News {
     var mainImage: UIImage?
     var text: String?
     var avatar: UIImage
-    var views: String
+    var views: String?
     var name: String
     var date: String
 }

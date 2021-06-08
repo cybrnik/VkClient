@@ -30,7 +30,7 @@
                         <color key="textColor" red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vh8-WT-YPW">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vh8-WT-YPW">
                         <rect key="frame" x="0.0" y="145" width="320" height="320"/>
                         <constraints>
                             <constraint firstAttribute="width" secondItem="vh8-WT-YPW" secondAttribute="height" multiplier="1:1" id="aJs-2a-dpP"/>

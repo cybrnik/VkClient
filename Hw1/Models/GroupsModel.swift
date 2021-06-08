@@ -30,7 +30,7 @@ struct ItemGroup: Codable {
     let name, screenName: String
     let isClosed: Int
     let type: TypeEnum
-    let isAdmin, isMember, isAdvertiser: Int
+    let isAdmin, isMember, isAdvertiser: Int?
     let itemDescription: String?
     let photo200: String
     let adminLevel: Int?
@@ -56,3 +56,4 @@ enum TypeEnum: String, Codable {
     case group = "group"
     case page = "page"
 }
+
