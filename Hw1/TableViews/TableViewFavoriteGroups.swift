@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import RealmSwift
 class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
     
 
@@ -67,7 +67,23 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
         myTableView.delegate = self
         self.showSpinner()
         VkApi().VKgetGroups (finished: {
-            
+            do {
+                let realm = try Realm()
+                let groups = realm.objects(GroupRealmObj.self)
+                for group in groups {
+
+                    do {
+                        let url = URL(string: group.mainPhoto)
+                        let data = try Data(contentsOf: url!)
+                        DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description:group.groupDescription, mainPhoto: UIImage(data: data), id: group.id))
+                    }
+                    catch{
+                        print(error)
+                    }
+                }
+            } catch {
+                print(error)
+            }
             self.filteredArray = []
             if self.searchBar.text == "" {
                 self.filteredArray = DataStorage.shared.favoriteGroupsArray
@@ -79,6 +95,8 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
                     }
                 }
             }
+            
+
             self.myTableView.reloadData()
             self.removeSpinner()
         })
@@ -94,13 +112,29 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
     @objc func refresh(_ sender: AnyObject) {
         self.showSpinner()
         VkApi().VKgetGroups (finished: {
-            
+            do {
+                let realm = try Realm()
+                let groups = realm.objects(GroupRealmObj.self)
+                for group in groups {
+
+                    do {
+                        let url = URL(string: group.mainPhoto)
+                        let data = try Data(contentsOf: url!)
+                        DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description:group.groupDescription, mainPhoto: UIImage(data: data), id: group.id))
+                    }
+                    catch{
+                        print(error)
+                    }
+                }
+            } catch {
+                print(error)
+            }
             self.filteredArray = []
             if self.searchBar.text == "" {
                 self.filteredArray = DataStorage.shared.favoriteGroupsArray
             }
             else {
-                for item in DataStorage.shared.favoriteGroupsArray{
+                for item in DataStorage.shared.favoriteGroupsArray {
                     if item.name.lowercased().contains(self.searchBar.text?.lowercased() ??  ""){
                         self.filteredArray.append(item)
                     }

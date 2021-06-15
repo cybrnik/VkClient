@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import RealmSwift
 class TableViewFriends: UIViewController, UISearchBarDelegate {
     
     @IBOutlet weak var searchBar: UISearchBar!
@@ -90,7 +90,25 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
         myTableView.delegate = self
         self.showSpinner()
         VkApi().VKgetFriends(finished: {
-            
+
+            do {
+                let realm = try Realm()
+                let users = realm.objects(UserRealmObj.self)
+                for user in users {
+
+                    do {
+                        let url = URL(string: user.mainPhoto)
+                        let data = try Data(contentsOf: url!)
+                        DataStorage.shared.friendsArray.append(User(name: user.name, mainPhoto: UIImage(data: data), photoArray: [UIImage(data: data)!], likes: 0, id: user.id))
+                    }
+                    catch{
+                        print(error)
+                    }
+                }
+            } catch {
+                print(error)
+            }
+
             self.filteredArray = []
             if self.searchBar.text == "" {
                 self.filteredArray = DataStorage.shared.friendsArray
@@ -102,6 +120,8 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
                     }
                 }
             }
+            
+
             self.myTableView.reloadData()
             self.removeSpinner()
         })
@@ -124,7 +144,26 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
     @objc func refresh(_ sender: AnyObject) {
         self.showSpinner()
         VkApi().VKgetFriends(finished: {
-            
+
+            do {
+                let realm = try Realm()
+                let users = realm.objects(UserRealmObj.self)
+                for user in users{
+
+                        
+                    do {
+                        let url = URL(string: user.mainPhoto)
+                        let data = try Data(contentsOf: url!)
+                        DataStorage.shared.friendsArray.append(User(name: user.name, mainPhoto: UIImage(data: data), photoArray: [UIImage(data: data)!], likes: 0, id: user.id))
+                    }
+                    catch{
+                        print(error)
+                    }
+                }
+            } catch {
+                print(error)
+            }
+
             self.filteredArray = []
             if self.searchBar.text == "" {
                 self.filteredArray = DataStorage.shared.friendsArray

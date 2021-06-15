@@ -10,16 +10,16 @@ import Alamofire
 import RealmSwift
 import UIKit
 
-class UserRlm: Object {
+class UserRealmObj: Object {
     @objc dynamic var name = ""
-    dynamic var mainPhoto = UIImage(named: "unnamed")
+    @objc dynamic var mainPhoto = ""
     @objc dynamic var likes = 0
     @objc dynamic var id = 0
     
 }
-class GroupRlm: Object {
+class GroupRealmObj: Object {
     @objc dynamic var name = ""
-    dynamic var mainPhoto = UIImage(named: "unnamed")
+    @objc dynamic var mainPhoto = ""
     @objc dynamic var groupDescription = ""
     @objc dynamic var id = 0
     
@@ -27,12 +27,12 @@ class GroupRlm: Object {
 
 class VkApi {
     
-    func saveUserData(_ users: [UserRlm]) {
-        
+    func saveUserData(_ users: [UserRealmObj]) {
+       
         do {
             
             let realm = try Realm()
-            
+
             
             realm.beginWrite()
             
@@ -47,7 +47,7 @@ class VkApi {
         }
     }
     
-    func saveGroupData(_ groups: [GroupRlm]) {
+    func saveGroupData(_ groups: [GroupRealmObj]) {
         
         do {
             
@@ -66,7 +66,34 @@ class VkApi {
             print(error)
         }
     }
-    
+    func realmDeleteUsersObjects() {
+        do {
+            let realm = try Realm()
+
+            let objects = realm.objects(UserRealmObj.self)
+
+            try! realm.write {
+                realm.delete(objects)
+            }
+        } catch let error as NSError {
+            // handle error
+            print("error - \(error.localizedDescription)")
+        }
+    }
+    func realmDeleteGroupsObjects() {
+        do {
+            let realm = try Realm()
+
+            let objects = realm.objects(GroupRealmObj.self)
+
+            try! realm.write {
+                realm.delete(objects)
+            }
+        } catch let error as NSError {
+            // handle error
+            print("error - \(error.localizedDescription)")
+        }
+    }
     func VKgetFriends(finished: @escaping () -> Void) {
         
         let url = URL(string: "https://api.vk.com/method/friends.get?access_token="+Session.shared.token+"&v=5.103&fields=photo_200_orig&order=hint")
@@ -78,25 +105,22 @@ class VkApi {
             print(data)
             guard let users = try? JSONDecoder().decode(Users.self, from: data)
             else {return}
-            var usersRlm = [UserRlm]()
+
+            var usersRlm = [UserRealmObj]()
             DataStorage.shared.friendsArray.removeAll()
+            self.realmDeleteUsersObjects()
             for user in users.response.items {
-                do {
-                    let url = URL(string: user.photo200_Orig)
-                    let data = try Data(contentsOf: url!)
+
                     
-                    let userRlm = UserRlm()
-                    userRlm.id = user.id
-                    userRlm.likes = 0
-                    userRlm.mainPhoto = UIImage(data: data)
-                    userRlm.name = user.firstName + " " + user.lastName
+                    let UserRealmObj = UserRealmObj()
+                    UserRealmObj.id = user.id
+                    UserRealmObj.likes = 0
+                    UserRealmObj.mainPhoto = user.photo200_Orig
+                    UserRealmObj.name = user.firstName + " " + user.lastName
                     
-                    usersRlm.append(userRlm)
-                    DataStorage.shared.friendsArray.append(User(name: user.firstName + " " + user.lastName, mainPhoto: UIImage(data: data), photoArray: [UIImage(data: data)!], likes: 0, id: user.id))
-                }
-                catch{
-                    print(error)
-                }
+                    usersRlm.append(UserRealmObj)
+
+
             }
             self.saveUserData(usersRlm)
             finished()
@@ -107,9 +131,9 @@ class VkApi {
     }
     func VKgetGroups(finished: @escaping () -> Void) {
         
-        
+       
         let url = URL(string: "https://api.vk.com/method/groups.get?extended=1&access_token="+Session.shared.token+"&v=5.103&fields=photo_200,description,activity")
-        
+
         AF.request(url!,method: .get).responseData { response in
             
             guard let data = response.value
@@ -117,27 +141,23 @@ class VkApi {
             
             guard let groups = try? JSONDecoder().decode(Groups.self, from: data)
             else {return}
-            var groupsRlm = [GroupRlm]()
+            var groupsRlm = [GroupRealmObj]()
             DataStorage.shared.favoriteGroupsArray.removeAll()
+            self.realmDeleteGroupsObjects()
             for group in groups.response.items {
-                do {
-                    let url = URL(string: group.photo200)
-                    let data = try Data(contentsOf: url!)
-                    let groupRlm = GroupRlm()
-                    groupRlm.id = group.id
-                    groupRlm.groupDescription = group.activity ?? ""
-                    groupRlm.mainPhoto = UIImage(data: data)
-                    groupRlm.name = group.name
-                    groupsRlm.append(groupRlm)
-                    DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description: group.activity, mainPhoto: UIImage(data: data), id: group.id))
-                }
-                catch{
-                    print(error)
-                }
+
+                    let GroupRealmObj = GroupRealmObj()
+                    GroupRealmObj.id = group.id
+                    GroupRealmObj.groupDescription = group.activity ?? ""
+                    GroupRealmObj.mainPhoto = group.photo200
+                    GroupRealmObj.name = group.name
+                    groupsRlm.append(GroupRealmObj)
+                   
+           
             }
-            print(DataStorage.shared.favoriteGroupsArray)
-            finished()
             self.saveGroupData(groupsRlm)
+            finished()
+            
         }
         
         
