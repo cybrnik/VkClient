@@ -23,32 +23,25 @@ struct ResponseGroup: Codable {
     let count: Int
     let items: [ItemGroup]
 }
-
 // MARK: - Item
 struct ItemGroup: Codable {
     let id: Int
     let name, screenName: String
     let isClosed: Int
     let type: TypeEnum
-    let isAdmin, isMember, isAdvertiser: Int?
-    let itemDescription: String?
+    let itemDescription, activity: String?
     let photo200: String
-    let adminLevel: Int?
     let deactivated: String?
-    let activity: String?
+
     enum CodingKeys: String, CodingKey {
         case id, name
         case screenName = "screen_name"
         case isClosed = "is_closed"
         case type
-        case isAdmin = "is_admin"
-        case isMember = "is_member"
-        case isAdvertiser = "is_advertiser"
         case itemDescription = "description"
-        case photo200 = "photo_200"
-        case adminLevel = "admin_level"
-        case deactivated
         case activity
+        case photo200 = "photo_200"
+        case deactivated
     }
 }
 
@@ -57,3 +50,38 @@ enum TypeEnum: String, Codable {
     case page = "page"
 }
 
+
+
+//// MARK: - Item
+//struct ItemGroup: Codable {
+//    let id: Int
+//    let name, screenName: String
+//    let isClosed: Int
+//    let type: TypeEnum
+//    let isAdmin, isMember, isAdvertiser: Int?
+//    let itemDescription: String?
+//    let photo200: String
+//    let adminLevel: Int?
+//    let deactivated: String?
+//    let activity: String?
+//    enum CodingKeys: String, CodingKey {
+//        case id, name
+//        case screenName = "screen_name"
+//        case isClosed = "is_closed"
+//        case type
+//        case isAdmin = "is_admin"
+//        case isMember = "is_member"
+//        case isAdvertiser = "is_advertiser"
+//        case itemDescription = "description"
+//        case photo200 = "photo_200"
+//        case adminLevel = "admin_level"
+//        case deactivated
+//        case activity
+//    }
+//}
+//
+//enum TypeEnum: String, Codable {
+//    case group = "group"
+//    case page = "page"
+//}
+//
