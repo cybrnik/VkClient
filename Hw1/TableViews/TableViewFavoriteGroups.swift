@@ -9,7 +9,7 @@ import UIKit
 import RealmSwift
 class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
     
-
+    var token: NotificationToken?
     var filteredArray = DataStorage.shared.favoriteGroupsArray
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var myTableView: UITableView!
@@ -50,6 +50,9 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
         return sections
     }
     override func viewDidLoad() {
+        
+        
+        
         filteredArray = []
         if searchBar.text == "" {
             filteredArray = DataStorage.shared.favoriteGroupsArray
@@ -66,6 +69,35 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
         myTableView.dataSource = self
         myTableView.delegate = self
         self.showSpinner()
+        let realm = try! Realm()
+        let groupsRlm = realm.objects(GroupRealmObj.self)
+        self.token = groupsRlm.observe {(changes: RealmCollectionChange) in
+            switch changes {
+            case .initial(let results):
+                print(results)
+            case let .update(results, _, _, _):
+                //print(results, deletions, insertions, modifications)
+                DataStorage.shared.favoriteGroupsArray.removeAll()
+                for group in results {
+
+                    do {
+                        let url = URL(string: group.mainPhoto)
+                        let data = try Data(contentsOf: url!)
+                        DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description:group.groupDescription, mainPhoto: UIImage(data: data), id: group.id))
+                    }
+                    catch{
+                        print(error)
+                    }
+                }
+                self.myTableView.reloadData()
+                
+            case .error(let error):
+                print(error)
+            }
+
+        }
+
+        
         VkApi().VKgetGroups (finished: {
             do {
                 let realm = try Realm()

@@ -8,7 +8,7 @@
 import UIKit
 import RealmSwift
 class TableViewFriends: UIViewController, UISearchBarDelegate {
-    
+    var token: NotificationToken?
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var myTableView: UITableView!
     var photo = UIImage(named: "unnamed")!
@@ -89,6 +89,35 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
         myTableView.dataSource = self
         myTableView.delegate = self
         self.showSpinner()
+        
+        let realm = try! Realm()
+        let usersRlm = realm.objects(UserRealmObj.self)
+        self.token = usersRlm.observe {(changes: RealmCollectionChange) in
+            switch changes {
+            case .initial(let results):
+                print(results)
+            case let .update(results, _, _, _):
+                //print(results, deletions, insertions, modifications)
+                DataStorage.shared.friendsArray.removeAll()
+                for user in results {
+                    do {
+                        let url = URL(string: user.mainPhoto)
+                        let data = try Data(contentsOf: url!)
+                        DataStorage.shared.friendsArray.append(User(name: user.name, mainPhoto: UIImage(data: data), photoArray: [UIImage(data: data)!], likes: 0, id: user.id))
+                    }
+                    catch{
+                        print(error)
+                    }
+                }
+                self.myTableView.reloadData()
+                
+            case .error(let error):
+                print(error)
+            }
+
+        }
+        
+        
         VkApi().VKgetFriends(finished: {
 
             do {
