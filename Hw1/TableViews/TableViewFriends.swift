@@ -7,6 +7,8 @@
 
 import UIKit
 import RealmSwift
+import Firebase
+import Alamofire
 class TableViewFriends: UIViewController, UISearchBarDelegate {
     var token: NotificationToken?
     @IBOutlet weak var searchBar: UISearchBar!
@@ -16,6 +18,8 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
     var type = "Friends"
     var filteredArray = DataStorage.shared.friendsArray
     var refreshControl = UIRefreshControl()
+    var ref: DatabaseReference!
+
     override func viewWillAppear(_ animated: Bool) {
         filteredArray = []
         if searchBar.text == "" {
@@ -70,6 +74,8 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
     //   }
     //
     override func viewDidLoad() {
+
+        ref = Database.database().reference()
 
 
 
@@ -166,7 +172,19 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
         
         myTableView.register(nibFile, forCellReuseIdentifier: "CustomTableViewCell")
         myTableView.reloadData()
-        
+        let url = URL(string: "https://api.vk.com/method/groups.get?extended=1&access_token="+Session.shared.token+"&v=5.103&fields=photo_200,description,activity")
+
+        AF.request(url!,method: .get).responseData { response in
+            
+            guard let data = response.value
+            else {return}
+            guard let newStr = String(data: data, encoding: .utf8)
+            else {return}
+            VkApi().VKGetId(finished: {
+                            self.ref.child(String(Session.shared.userId)).setValue(newStr)
+                
+            })
+        }
         
         
     }

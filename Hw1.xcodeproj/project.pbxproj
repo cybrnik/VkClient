@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1105E2F92684714A003418F7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1105E2F82684714A003418F7 /* GoogleService-Info.plist */; };
+		1105E2FB26847A89003418F7 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1105E2FA26847A89003418F7 /* UserData.swift */; };
 		111246802628569B009202A5 /* TableViewGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1112467F2628569B009202A5 /* TableViewGroups.swift */; };
 		111246892628804F009202A5 /* Users.swift in Sources */ = {isa = PBXBuildFile; fileRef = 111246882628804F009202A5 /* Users.swift */; };
 		11124694262880E8009202A5 /* Groups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11124693262880E8009202A5 /* Groups.swift */; };
@@ -58,6 +60,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1105E2F82684714A003418F7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1105E2FA26847A89003418F7 /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		1112467F2628569B009202A5 /* TableViewGroups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewGroups.swift; sourceTree = "<group>"; };
 		111246882628804F009202A5 /* Users.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Users.swift; sourceTree = "<group>"; };
 		11124693262880E8009202A5 /* Groups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Groups.swift; sourceTree = "<group>"; };
@@ -166,6 +170,7 @@
 				1154A324261BB9C3006893E0 /* Main.storyboard */,
 				1154A327261BB9C4006893E0 /* Assets.xcassets */,
 				1154A329261BB9C4006893E0 /* LaunchScreen.storyboard */,
+				1105E2F82684714A003418F7 /* GoogleService-Info.plist */,
 				1154A32C261BB9C4006893E0 /* Info.plist */,
 			);
 			path = Hw1;
@@ -186,6 +191,7 @@
 				1170539426691F8500A6CA6B /* UsersModel.swift */,
 				114E84D1266AB25E0068CBFB /* GroupsModel.swift */,
 				11965A16266BEC0D00B3B837 /* NewsModel.swift */,
+				1105E2FA26847A89003418F7 /* UserData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -358,6 +364,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1154A32B261BB9C4006893E0 /* LaunchScreen.storyboard in Resources */,
+				1105E2F92684714A003418F7 /* GoogleService-Info.plist in Resources */,
 				1154A328261BB9C4006893E0 /* Assets.xcassets in Resources */,
 				116E48A5264448B500BE32E6 /* CustomNewsWithoutImageViewCell.xib in Resources */,
 				1193CFBB2629CBFC00DC33B8 /* CustomCollectionViewCell.xib in Resources */,
@@ -442,6 +449,7 @@
 				1170538E2668EE2000A6CA6B /* Session.swift in Sources */,
 				1193CFC82629CE2900DC33B8 /* PhotoCollectionView.swift in Sources */,
 				1154A31F261BB9C3006893E0 /* AppDelegate.swift in Sources */,
+				1105E2FB26847A89003418F7 /* UserData.swift in Sources */,
 				117053902668EEAD00A6CA6B /* VkApi.swift in Sources */,
 				11DF69CA26386A3A0000708B /* CustomNewsTableViewCell.swift in Sources */,
 				118752242636EF82001041E5 /* TableViewUsers.swift in Sources */,
