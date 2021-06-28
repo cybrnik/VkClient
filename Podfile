@@ -8,5 +8,6 @@ target 'Hw1' do
   # Pods for Hw1
   pod 'Alamofire'
   pod 'RealmSwift'
-
+  pod 'Firebase/Auth'
+  pod 'Firebase/Database'
 end

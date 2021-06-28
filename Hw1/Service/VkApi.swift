@@ -169,6 +169,25 @@ class VkApi {
         formatter.dateFormat = "dd MMM yyyy HH:mm" //yyyy
         return formatter.string(from: date)
     }
+    func VKGetId(finished: @escaping () -> Void) {
+    
+        let url = URL(string: "https://api.vk.com/method/users.get?access_token="+Session.shared.token+"&v=5.103")
+        
+        AF.request(url!,method: .get).responseData { response in
+            
+            guard let data = response.value
+            else {return}
+            
+            guard let UserData = try? JSONDecoder().decode(UserData.self, from: data)
+            else {return}
+            
+            Session.shared.userId = UserData.response[0].id
+            finished()
+            
+        }
+        
+        
+    }
     func VKgetNews(finished: @escaping () -> Void) {
         
         
