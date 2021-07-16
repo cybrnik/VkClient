@@ -16,13 +16,6 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="l55-dZ-829">
-                        <rect key="frame" x="0.0" y="0.0" width="70" height="70"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="70" id="6ME-cE-Dmd"/>
-                            <constraint firstAttribute="width" secondItem="l55-dZ-829" secondAttribute="height" multiplier="1:1" id="GdE-zj-gO4"/>
-                        </constraints>
-                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="CTN-cs-rrb">
                         <rect key="frame" x="78" y="15" width="226" height="21"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -37,11 +30,20 @@
                         <color key="textColor" red="0.75406885150000003" green="0.75408679249999999" blue="0.75407713649999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="l55-dZ-829">
+                        <rect key="frame" x="0.0" y="0.0" width="70" height="70"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="70" id="1CR-u4-jbD"/>
+                            <constraint firstAttribute="width" constant="70" id="B3Q-1s-xH6"/>
+                            <constraint firstAttribute="width" secondItem="l55-dZ-829" secondAttribute="height" multiplier="1:1" id="Gba-tc-omB"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="l55-dZ-829" firstAttribute="width" secondItem="l55-dZ-829" secondAttribute="height" multiplier="1:1" id="3ra-zS-Y4c"/>
-                    <constraint firstItem="CTN-cs-rrb" firstAttribute="leading" secondItem="l55-dZ-829" secondAttribute="trailing" constant="8" id="Ahb-0z-PbO"/>
-                    <constraint firstItem="l55-dZ-829" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="mFK-R7-uCq"/>
+                    <constraint firstItem="CTN-cs-rrb" firstAttribute="leading" secondItem="l55-dZ-829" secondAttribute="trailing" constant="8" symbolic="YES" id="0Hs-Fl-aMi"/>
+                    <constraint firstItem="l55-dZ-829" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="5ia-4Y-RfS"/>
+                    <constraint firstAttribute="bottom" secondItem="l55-dZ-829" secondAttribute="bottom" id="EaH-Rw-bfz"/>
+                    <constraint firstItem="l55-dZ-829" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="j4s-gu-Spd"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>

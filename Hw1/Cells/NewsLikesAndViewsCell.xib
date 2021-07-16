@@ -16,34 +16,42 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="37"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yO1-vP-bdm">
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yO1-vP-bdm">
                         <rect key="frame" x="16" y="7" width="21" height="22"/>
                         <state key="normal" image="heart" catalog="system"/>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HZi-L9-rLN">
-                        <rect key="frame" x="68" y="7" width="23" height="22"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HZi-L9-rLN">
+                        <rect key="frame" x="71" y="7" width="23" height="22"/>
                         <state key="normal" image="bubble.left" catalog="system"/>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mp7-5D-MnT">
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mp7-5D-MnT">
                         <rect key="frame" x="229" y="7" width="26" height="22"/>
                         <state key="normal" image="eye" catalog="system"/>
                     </button>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s1J-LP-j6X">
-                        <rect key="frame" x="263" y="7" width="42" height="21"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s1J-LP-j6X">
+                        <rect key="frame" x="256" y="7" width="42" height="22"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uBg-zB-Ji8">
-                        <rect key="frame" x="125" y="7" width="21" height="21"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uBg-zB-Ji8">
+                        <rect key="frame" x="126" y="8" width="21" height="22"/>
                         <state key="normal" image="arrowshape.turn.up.right" catalog="system"/>
                     </button>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="Mp7-5D-MnT" firstAttribute="top" secondItem="s1J-LP-j6X" secondAttribute="bottom" constant="-22" id="0RQ-Aj-Hzb"/>
+                    <constraint firstItem="s1J-LP-j6X" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="256" id="1TG-6n-Y0M"/>
+                    <constraint firstAttribute="bottom" secondItem="Mp7-5D-MnT" secondAttribute="bottom" constant="8" id="1uG-HP-AcH"/>
                     <constraint firstItem="HZi-L9-rLN" firstAttribute="leading" secondItem="yO1-vP-bdm" secondAttribute="trailing" constant="34" id="8Qi-XH-gQA"/>
+                    <constraint firstItem="Mp7-5D-MnT" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="7" id="AsO-zx-zsE"/>
                     <constraint firstItem="s1J-LP-j6X" firstAttribute="leading" secondItem="Mp7-5D-MnT" secondAttribute="trailing" constant="1" id="Mst-pd-UzU"/>
                     <constraint firstItem="s1J-LP-j6X" firstAttribute="top" secondItem="uBg-zB-Ji8" secondAttribute="top" constant="-1" id="Wi5-6K-Y5t"/>
+                    <constraint firstItem="yO1-vP-bdm" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="Y4X-x5-nfT"/>
+                    <constraint firstAttribute="bottom" secondItem="s1J-LP-j6X" secondAttribute="bottom" constant="8" id="Z3R-an-saP"/>
                     <constraint firstItem="Mp7-5D-MnT" firstAttribute="top" secondItem="HZi-L9-rLN" secondAttribute="top" id="bJp-hj-s4h"/>
+                    <constraint firstItem="Mp7-5D-MnT" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="229" id="cVS-ev-Vk4"/>
+                    <constraint firstItem="s1J-LP-j6X" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="7" id="kEB-Q6-BEU"/>
                     <constraint firstItem="s1J-LP-j6X" firstAttribute="centerY" secondItem="uBg-zB-Ji8" secondAttribute="centerY" constant="-1" id="phW-ee-uji"/>
                     <constraint firstItem="uBg-zB-Ji8" firstAttribute="leading" secondItem="HZi-L9-rLN" secondAttribute="trailing" constant="32" id="uxq-H5-pER"/>
                     <constraint firstItem="yO1-vP-bdm" firstAttribute="baseline" secondItem="HZi-L9-rLN" secondAttribute="baseline" id="xxD-du-uOx"/>
