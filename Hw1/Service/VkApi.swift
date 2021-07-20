@@ -27,19 +27,165 @@ class GroupRealmObj: Object {
 }
 
 class VkApi {
+    
+    /// Создает асинхронную операцию с ручным управлением состояний
+    /// Чтобы заверсить исполнение, необходимо вызвать метод [finished()](x-source-tag://finished)
+    class AsyncOperation: Operation {
+        
+        enum State: String {
+            case ready, executing, finished
+            
+            /// Маленький хелпер, который возвращает состояния для KVO
+            /// - Returns: `isReady` или `isExecuting` или `isFinished`
+            fileprivate var keyPath: String {
+                return "is" + self.rawValue.capitalized
+            }
+        }
+        
+        private var state: State = State.ready {
+            // Уведомляем систему KVO, о том что у нас изменились состояния в операции
+            
+            // Вызывается в момент установки значений
+            willSet {
+                self.willChangeValue(forKey: self.state.keyPath)
+                self.willChangeValue(forKey: newValue.keyPath)
+            }
+            
+            // Вызывается после установки значений
+            didSet {
+                self.didChangeValue(forKey: self.state.keyPath)
+                self.didChangeValue(forKey: oldValue.keyPath)
+            }
+        }
+        
+        override var isAsynchronous: Bool {
+            return true
+        }
+        
+        override var isReady: Bool {
+            return super.isReady && self.state == .ready
+        }
+        
+        override var isExecuting: Bool {
+            return self.state == .executing
+        }
+        
+        override var isFinished: Bool {
+            return self.state == .finished
+        }
+        
+        override func start() {
+            if self.isCancelled {
+                self.state = .finished
+            } else {
+                self.main()
+                self.state = .executing
+            }
+        }
+        
+        override func cancel() {
+            super.cancel()
+            self.state = .finished
+        }
+        
+        /// Set operation as finished
+        /// - Tag: finished
+        func finished() {
+            self.state = .finished
+        }
+    }
 
+
+    /// Асинхронная операция для получения данных из сети
+    class GetDataOperation: AsyncOperation {
+        
+        // Храним токен для отмены
+        private var requestToken: URLSessionDataTask?
+        
+        private(set) var data: Data?
+        
+        override func cancel() {
+            // Останавливаем запрос из сети, если операция отменена
+            self.requestToken?.cancel()
+            super.cancel()
+        }
+        
+        override func main() {
+            let url = URL(string: "https://api.vk.com/method/friends.get?access_token=" + Session.shared.token + "&v=5.103&fields=photo_200_orig&order=hint")!
+            self.requestToken = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+                self?.data = data
+                self?.finished()
+            }
+            
+            // Делаем запрос
+            self.requestToken?.resume()
+        }
+    }
+
+
+
+    class ParseDataOperation: Operation {
+        
+        private(set) var users: Users?
+        
+        override func main() {
+            // Если нет зависимости GetDataOperation, то нужно закочнить исполнение
+            guard let operation = self.dependencies.first as? GetDataOperation,
+                  let data = operation.data
+            else {
+                return
+            }
+            
+            guard let users = try? JSONDecoder().decode(Users.self, from: data)
+                else { return }
+            self.users = users
+        }
+    }
+
+    /// Ожидает исполнения ParseDataOperation, после чего начинает исполняется
+    class SaveUsersDataToRealm: Operation {
+        
+        override func main() {
+            guard let operation = self.dependencies.first as? ParseDataOperation else { return }
+            
+           
+            var usersRlm = [UserRealmObj]()
+            DataStorage.shared.friendsArray.removeAll()
+            VkApi().realmDeleteUsersObjects()
+            for user in operation.users!.response.items {
+    
+    
+                let UserRealmObj = UserRealmObj()
+                UserRealmObj.id = user.id
+                UserRealmObj.likes = 0
+                UserRealmObj.mainPhoto = user.photo200_Orig
+                UserRealmObj.name = user.firstName + " " + user.lastName
+    
+                usersRlm.append(UserRealmObj)
+    
+    
+            }
+            VkApi().saveUserData(usersRlm)
+
+        }
+    }
+
+    
+
+
+
+
+
+    // GetDataOperation -> ParseDataOperation -> ReloadTableViewOperation
     func saveUserData(_ users: [UserRealmObj]) {
 
         do {
 
             let realm = try Realm()
 
-
             realm.beginWrite()
 
-
             realm.add(users)
-
 
             try realm.commitWrite()
         } catch {
@@ -97,37 +243,20 @@ class VkApi {
     }
     func VKgetFriends(finished: @escaping () -> Void) {
 
-        let url = URL(string: "https://api.vk.com/method/friends.get?access_token=" + Session.shared.token + "&v=5.103&fields=photo_200_orig&order=hint")
-        AF.request(url!, method: .get).responseData { response in
+        let queue = OperationQueue()
+        
+        
+        let getDataOp = GetDataOperation()
+        queue.addOperation(getDataOp)
+        
 
-            guard let data = response.value
+        let parseDataOp = ParseDataOperation()
+        parseDataOp.addDependency(getDataOp)
+        queue.addOperation(parseDataOp)
 
-                else { return }
-            print(data)
-            guard let users = try? JSONDecoder().decode(Users.self, from: data)
-                else { return }
-
-            var usersRlm = [UserRealmObj]()
-            DataStorage.shared.friendsArray.removeAll()
-            self.realmDeleteUsersObjects()
-            for user in users.response.items {
-
-
-                let UserRealmObj = UserRealmObj()
-                UserRealmObj.id = user.id
-                UserRealmObj.likes = 0
-                UserRealmObj.mainPhoto = user.photo200_Orig
-                UserRealmObj.name = user.firstName + " " + user.lastName
-
-                usersRlm.append(UserRealmObj)
-
-
-            }
-            self.saveUserData(usersRlm)
-            finished()
-
-        }
-
+        let saveDataOp = SaveUsersDataToRealm()
+        saveDataOp.addDependency(parseDataOp)
+        finished()
 
     }
     func VKgetGroups(finished: @escaping () -> Void) {
