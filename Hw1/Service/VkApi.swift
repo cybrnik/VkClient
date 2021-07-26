@@ -10,6 +10,7 @@ import Alamofire
 import RealmSwift
 import SwiftyJSON
 import UIKit
+import PromiseKit
 
 class UserRealmObj: Object {
     @objc dynamic var name = ""
@@ -95,6 +96,33 @@ class VkApi {
         }
     }
 
+    
+    
+    func getGroupPromise() -> Promise<Data> {
+        let url = URL(string: "https://api.vk.com/method/groups.get?extended=1&access_token=" + Session.shared.token + "&v=5.103&fields=photo_200,description,activity")
+        let promise = Promise<Data> { resolver in
+            AF.request(url!, method: .get).responseData { response in
+                switch response.result {
+                   case .success(let value):
+                       resolver.fulfill(value)
+                   case .failure(let error):
+                       resolver.reject(error)
+                }
+            }
+        }
+        return promise
+    }
+//    func parseGroupPromise(data: Data) -> Promise<Groups> {
+//        let promise = Promise<Groups> { resolver in
+//            do {
+//                resolver.fulfill(try JSONDecoder().decode(Groups.self, from: data))
+//            }
+//            catch {
+//                resolver.reject(Error)
+//            }
+//        }
+//
+//    }
 
     /// Асинхронная операция для получения данных из сети
     class GetDataOperation: AsyncOperation {
@@ -260,17 +288,9 @@ class VkApi {
 
     }
     func VKgetGroups(finished: @escaping () -> Void) {
-
-
-        let url = URL(string: "https://api.vk.com/method/groups.get?extended=1&access_token=" + Session.shared.token + "&v=5.103&fields=photo_200,description,activity")
-
-        AF.request(url!, method: .get).responseData { response in
-
-            guard let data = response.value
-                else { return }
-
+        getGroupPromise().get { [self] data in
             guard let groups = try? JSONDecoder().decode(Groups.self, from: data)
-                else { return }
+            else { return }
             var groupsRlm = [GroupRealmObj]()
             DataStorage.shared.favoriteGroupsArray.removeAll()
             self.realmDeleteGroupsObjects()
@@ -287,10 +307,7 @@ class VkApi {
             }
             self.saveGroupData(groupsRlm)
             finished()
-
         }
-
-
 
 
     }

@@ -53,7 +53,7 @@ class CustomTableViewCell: UITableViewCell {
         }
         if let image = image{
             MyImageView.image = image
-        }else{
+        } else { 
             MyImageView.image = UIImage(named: "unnamed")
         }
     }

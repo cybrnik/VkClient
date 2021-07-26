@@ -106,10 +106,10 @@ extension TableViewGroups: UITableViewDataSource {
         var i = 0
         var iStruct = 0
 
-        for (_,names) in sections{
-            if i == indexPath.section{
+        for (_,names) in sections {
+            if i == indexPath.section {
                 break
-            }else{
+            } else {
                 iStruct += names.count
             }
             i+=1

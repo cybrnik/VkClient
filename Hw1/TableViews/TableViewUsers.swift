@@ -13,6 +13,7 @@ class TableViewUsers: UIViewController, UISearchBarDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var myTableView: UITableView!
+    var photoService: PhotoService?
     var photo = UIImage(named: "unnamed")!
     var row = Int()
     var type = "Users"

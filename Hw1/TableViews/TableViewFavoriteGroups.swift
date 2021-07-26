@@ -14,6 +14,7 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var myTableView: UITableView!
     var refreshControl = UIRefreshControl()
+    var photoService: PhotoService?
     override func viewWillAppear(_ animated: Bool) {
         filteredArray = []
         if searchBar.text == "" {
@@ -80,14 +81,14 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
                 DataStorage.shared.favoriteGroupsArray.removeAll()
                 for group in results {
 
-                    do {
-                        let url = URL(string: group.mainPhoto)
-                        let data = try Data(contentsOf: url!)
-                        DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description:group.groupDescription, mainPhoto: UIImage(data: data), id: group.id))
-                    }
-                    catch{
-                        print(error)
-                    }
+//                    do {
+////                        let url = URL(string: group.mainPhoto)
+//                        let data = try Data(contentsOf: url!)
+                        DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description:group.groupDescription, mainPhoto: self.photoService?.photo( byUrl: group.mainPhoto), id: group.id))
+//                    }
+//                    catch{
+//                        print(error)
+//                    }
                 }
                 self.myTableView.reloadData()
                 
@@ -104,14 +105,14 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
                 let groups = realm.objects(GroupRealmObj.self)
                 for group in groups {
 
-                    do {
-                        let url = URL(string: group.mainPhoto)
-                        let data = try Data(contentsOf: url!)
-                        DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description:group.groupDescription, mainPhoto: UIImage(data: data), id: group.id))
-                    }
-                    catch{
-                        print(error)
-                    }
+//                    do {
+                        //                        let url = URL(string: group.mainPhoto)
+                        //                        let data = try Data(contentsOf: url!)
+                        DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description:group.groupDescription, mainPhoto: self.photoService?.photo( byUrl: group.mainPhoto), id: group.id))
+//                    }
+//                    catch{
+//                        print(error)
+//                    }
                 }
             } catch {
                 print(error)
@@ -149,14 +150,14 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
                 let groups = realm.objects(GroupRealmObj.self)
                 for group in groups {
 
-                    do {
-                        let url = URL(string: group.mainPhoto)
-                        let data = try Data(contentsOf: url!)
-                        DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description:group.groupDescription, mainPhoto: UIImage(data: data), id: group.id))
-                    }
-                    catch{
-                        print(error)
-                    }
+                    //                    do {
+                                            //                        let url = URL(string: group.mainPhoto)
+                                            //                        let data = try Data(contentsOf: url!)
+                        DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description:group.groupDescription, mainPhoto: self.photoService?.photo( byUrl: group.mainPhoto), id: group.id))
+                    //                    }
+                    //                    catch{
+                    //                        print(error)
+                    //                    }
                 }
             } catch {
                 print(error)
