@@ -13,11 +13,13 @@
 import Foundation
 
 // MARK: - UserData
+
 struct UserData: Codable {
     let response: [UserResponse]
 }
 
 // MARK: - Response
+
 struct UserResponse: Codable {
     let firstName: String
     let id: Int

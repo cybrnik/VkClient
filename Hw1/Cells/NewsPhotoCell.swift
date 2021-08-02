@@ -8,34 +8,31 @@
 import UIKit
 
 class NewsPhotoCell: UITableViewCell {
+    @IBOutlet var myImage: UIImageView!
 
-    @IBOutlet weak var myImage: UIImageView!
-
-    func clearCell(){
+    func clearCell() {
         myImage.image = nil
-
     }
 
     override func awakeFromNib() {
-
-
         super.awakeFromNib()
         clearCell()
     }
+
     override func prepareForReuse() {
         clearCell()
     }
+
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
+
         // Configure the view for the selected state
     }
-    func configure(image: UIImage?){
+
+    func configure(image: UIImage?) {
         clearCell()
-        if let image = image{
+        if let image = image {
             myImage.image = image
         }
-
     }
-    
 }

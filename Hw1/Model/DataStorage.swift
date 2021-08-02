@@ -8,20 +8,17 @@
 import Foundation
 import UIKit
 
-
 class DataStorage: NSObject {
     static let shared = DataStorage()
-    private override init(){
+    override private init() {
         super.init()
     }
-    
-    
+
     var usersArray = [User]()
     var friendsArray = [User]()
-    
-    
+
     var groupsArray = [Group]()
     var favoriteGroupsArray = [Group]()
-    
+
     var newsArray = [News]()
 }

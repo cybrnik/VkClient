@@ -48,7 +48,7 @@
 		11DF69CA26386A3A0000708B /* CustomNewsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DF69C826386A3A0000708B /* CustomNewsTableViewCell.swift */; };
 		11DF69CD26386E6F0000708B /* TableViewNews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DF69CC26386E6F0000708B /* TableViewNews.swift */; };
 		11DF69CF2638721A0000708B /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DF69CE2638721A0000708B /* News.swift */; };
-		860A8844F1733F6DAAD9870A /* Pods_Hw1.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F6F46BE354E9D1D35EED6B42 /* Pods_Hw1.framework */; };
+		7E3B3A273199D955E787FB9E /* Pods_Hw1.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D8DC6EC42D6E277C08F0E0F /* Pods_Hw1.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,9 +113,9 @@
 		11DF69C826386A3A0000708B /* CustomNewsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNewsTableViewCell.swift; sourceTree = "<group>"; };
 		11DF69CC26386E6F0000708B /* TableViewNews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewNews.swift; sourceTree = "<group>"; };
 		11DF69CE2638721A0000708B /* News.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = News.swift; sourceTree = "<group>"; };
-		94529DE7DA4D2AD8752FB151 /* Pods-Hw1.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hw1.debug.xcconfig"; path = "Target Support Files/Pods-Hw1/Pods-Hw1.debug.xcconfig"; sourceTree = "<group>"; };
-		A214CA13B56F7856A0CF1C65 /* Pods-Hw1.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hw1.release.xcconfig"; path = "Target Support Files/Pods-Hw1/Pods-Hw1.release.xcconfig"; sourceTree = "<group>"; };
-		F6F46BE354E9D1D35EED6B42 /* Pods_Hw1.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Hw1.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D8DC6EC42D6E277C08F0E0F /* Pods_Hw1.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Hw1.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DB1EACDE0E74E4176FDB227 /* Pods-Hw1.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hw1.release.xcconfig"; path = "Target Support Files/Pods-Hw1/Pods-Hw1.release.xcconfig"; sourceTree = "<group>"; };
+		B92858A16E0582F6129C49C6 /* Pods-Hw1.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Hw1.debug.xcconfig"; path = "Target Support Files/Pods-Hw1/Pods-Hw1.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,7 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				860A8844F1733F6DAAD9870A /* Pods_Hw1.framework in Frameworks */,
+				7E3B3A273199D955E787FB9E /* Pods_Hw1.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,7 +161,7 @@
 				1154A31D261BB9C3006893E0 /* Hw1 */,
 				1154A31C261BB9C3006893E0 /* Products */,
 				A648706401742A37B6B179A9 /* Pods */,
-				1E7DAEB74F0D111654BAEBC5 /* Frameworks */,
+				8D7479BBF2578FD7F476C3BD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -268,10 +268,10 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		1E7DAEB74F0D111654BAEBC5 /* Frameworks */ = {
+		8D7479BBF2578FD7F476C3BD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				F6F46BE354E9D1D35EED6B42 /* Pods_Hw1.framework */,
+				7D8DC6EC42D6E277C08F0E0F /* Pods_Hw1.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -279,8 +279,8 @@
 		A648706401742A37B6B179A9 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				94529DE7DA4D2AD8752FB151 /* Pods-Hw1.debug.xcconfig */,
-				A214CA13B56F7856A0CF1C65 /* Pods-Hw1.release.xcconfig */,
+				B92858A16E0582F6129C49C6 /* Pods-Hw1.debug.xcconfig */,
+				9DB1EACDE0E74E4176FDB227 /* Pods-Hw1.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -292,11 +292,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1154A345261BB9C5006893E0 /* Build configuration list for PBXNativeTarget "Hw1" */;
 			buildPhases = (
-				8BE25CC537A44B8346619A7F /* [CP] Check Pods Manifest.lock */,
+				D891310D4C1C1BED09B54409 /* [CP] Check Pods Manifest.lock */,
 				1154A317261BB9C3006893E0 /* Sources */,
 				1154A318261BB9C3006893E0 /* Frameworks */,
 				1154A319261BB9C3006893E0 /* Resources */,
-				6BE895FF3636AE54BEF6B973 /* [CP] Embed Pods Frameworks */,
+				BDB19BEC3F91226EF7C0A9E7 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -422,7 +422,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		6BE895FF3636AE54BEF6B973 /* [CP] Embed Pods Frameworks */ = {
+		BDB19BEC3F91226EF7C0A9E7 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -439,7 +439,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Hw1/Pods-Hw1-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8BE25CC537A44B8346619A7F /* [CP] Check Pods Manifest.lock */ = {
+		D891310D4C1C1BED09B54409 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -667,7 +667,7 @@
 		};
 		1154A346261BB9C5006893E0 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 94529DE7DA4D2AD8752FB151 /* Pods-Hw1.debug.xcconfig */;
+			baseConfigurationReference = B92858A16E0582F6129C49C6 /* Pods-Hw1.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -687,7 +687,7 @@
 		};
 		1154A347261BB9C5006893E0 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A214CA13B56F7856A0CF1C65 /* Pods-Hw1.release.xcconfig */;
+			baseConfigurationReference = 9DB1EACDE0E74E4176FDB227 /* Pods-Hw1.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

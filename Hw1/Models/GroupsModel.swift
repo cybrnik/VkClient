@@ -13,17 +13,20 @@
 import Foundation
 
 // MARK: - Groups
+
 struct Groups: Codable {
     let response: ResponseGroup
 }
 
-
 // MARK: - Response
+
 struct ResponseGroup: Codable {
     let count: Int
     let items: [ItemGroup]
 }
+
 // MARK: - Item
+
 struct ItemGroup: Codable {
     let id: Int
     let name, screenName: String
@@ -46,14 +49,12 @@ struct ItemGroup: Codable {
 }
 
 enum TypeEnum: String, Codable {
-    case group = "group"
-    case page = "page"
+    case group
+    case page
 }
 
-
-
 //// MARK: - Item
-//struct ItemGroup: Codable {
+// struct ItemGroup: Codable {
 //    let id: Int
 //    let name, screenName: String
 //    let isClosed: Int
@@ -78,10 +79,10 @@ enum TypeEnum: String, Codable {
 //        case deactivated
 //        case activity
 //    }
-//}
+// }
 //
-//enum TypeEnum: String, Codable {
+// enum TypeEnum: String, Codable {
 //    case group = "group"
 //    case page = "page"
-//}
+// }
 //

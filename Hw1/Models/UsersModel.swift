@@ -13,17 +13,20 @@
 import Foundation
 
 // MARK: - Users
+
 struct Users: Codable {
     let response: Response
 }
 
 // MARK: - Response
+
 struct Response: Codable {
     let count: Int
     let items: [Item]
 }
 
 // MARK: - Item
+
 struct Item: Codable {
     let firstName: String
     let id: Int
@@ -47,6 +50,6 @@ struct Item: Codable {
 }
 
 enum Deactivated: String, Codable {
-    case banned = "banned"
-    case deleted = "deleted"
+    case banned
+    case deleted
 }
