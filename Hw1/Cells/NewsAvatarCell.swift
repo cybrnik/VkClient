@@ -1,26 +1,20 @@
 //
-//  CustomNewsTableViewCell.swift
+//  NewsAvatarCell.swift
 //  Hw1
 //
-//  Created by Nikita on 27.04.2021.
+//  Created by Nikita on 12.07.2021.
 //
 
 import UIKit
 
-class CustomNewsTableViewCell: UITableViewCell {
-    @IBOutlet var mainText: UILabel!
+class NewsAvatarCell: UITableViewCell {
     @IBOutlet var name: UILabel!
     @IBOutlet var date: UILabel!
     @IBOutlet var Avatar: UIImageView!
-    @IBOutlet var myImage: UIImageView!
-    @IBOutlet var views: UILabel!
     func clearCell() {
-        myImage.image = nil
-        mainText.text = nil
         name.text = nil
         date.text = nil
         Avatar.image = nil
-        views.text = nil
     }
 
     override func awakeFromNib() {
@@ -40,14 +34,8 @@ class CustomNewsTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
-    func configure(image: UIImage?, text: String?, name: String?, date: String?, Avatar: UIImage?, views: String?) {
+    func configure(name: String?, date: String?, Avatar: UIImage?) {
         clearCell()
-        if let image = image {
-            myImage.image = image
-        }
-        if let text = text {
-            mainText.text = text
-        }
         if let name = name {
             self.name.text = name
         }
@@ -56,9 +44,6 @@ class CustomNewsTableViewCell: UITableViewCell {
         }
         if let Avatar = Avatar {
             self.Avatar.image = Avatar
-        }
-        if let views = views {
-            self.views.text = views
         }
     }
 }

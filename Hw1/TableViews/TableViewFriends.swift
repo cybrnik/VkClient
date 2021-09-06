@@ -5,14 +5,14 @@
 //  Created by Nikita on 15.04.2021.
 //
 
-import UIKit
-import RealmSwift
-import Firebase
 import Alamofire
+import Firebase
+import RealmSwift
+import UIKit
 class TableViewFriends: UIViewController, UISearchBarDelegate {
     var token: NotificationToken?
-    @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var myTableView: UITableView!
+    @IBOutlet var searchBar: UISearchBar!
+    @IBOutlet var myTableView: UITableView!
     var photo = UIImage(named: "unnamed")!
     var row = Int()
     var type = "Friends"
@@ -24,20 +24,20 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
         filteredArray = []
         if searchBar.text == "" {
             filteredArray = DataStorage.shared.friendsArray
-        }
-        else {
-            for item in DataStorage.shared.friendsArray{
-                if item.name.lowercased().contains(searchBar.text?.lowercased() ??  ""){
+        } else {
+            for item in DataStorage.shared.friendsArray {
+                if item.name.lowercased().contains(searchBar.text?.lowercased() ?? "") {
                     filteredArray.append(item)
                 }
             }
         }
-        
+
         super.viewWillAppear(animated)
         myTableView.reloadData()
     }
-    override func prepare(for segue: UIStoryboardSegue,sender: Any?){
-        if segue.identifier == "fromFriendsToPhoto"{
+
+    override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
+        if segue.identifier == "fromFriendsToPhoto" {
             guard let dst = segue.destination as? PhotoCollectionView else {
                 return
             }
@@ -46,27 +46,28 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
             dst.row = row
         }
     }
+
     func sortAndGetSections() -> [(letter: Character, names: [String])] {
         filteredArray.sort { (lhs: User, rhs: User) -> Bool in
-            return lhs.name < rhs.name
+            lhs.name < rhs.name
         }
-        
+
         var friends = [String]()
-        for item in filteredArray{
+        for item in filteredArray {
             friends.append(item.name)
         }
-        let sections = Dictionary(grouping: friends) { (country) -> Character in
-            return country.first!
+        let sections = Dictionary(grouping: friends) { country -> Character in
+            country.first!
         }
         .map { (key: Character, value: [String]) -> (letter: Character, names: [String]) in
             (letter: key, names: value)
         }
-        .sorted { (left, right) -> Bool in
+        .sorted { left, right -> Bool in
             left.letter < right.letter
         }
         return sections
     }
-    
+
     //    @objc func refresh() {
     //
     //       self.myTableView.reloadData() // a refresh the tableView.
@@ -74,18 +75,14 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
     //   }
     //
     override func viewDidLoad() {
-
         ref = Database.database().reference()
-
-
 
         filteredArray = []
         if searchBar.text == "" {
             filteredArray = DataStorage.shared.friendsArray
-        }
-        else {
-            for item in DataStorage.shared.friendsArray{
-                if item.name.lowercased().contains(searchBar.text?.lowercased() ??  ""){
+        } else {
+            for item in DataStorage.shared.friendsArray {
+                if item.name.lowercased().contains(searchBar.text?.lowercased() ?? "") {
                     filteredArray.append(item)
                 }
             }
@@ -94,49 +91,43 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
         searchBar.delegate = self
         myTableView.dataSource = self
         myTableView.delegate = self
-        self.showSpinner()
-        
+        showSpinner()
+
         let realm = try! Realm()
         let usersRlm = realm.objects(UserRealmObj.self)
-        self.token = usersRlm.observe {(changes: RealmCollectionChange) in
+        token = usersRlm.observe { (changes: RealmCollectionChange) in
             switch changes {
-            case .initial(let results):
+            case let .initial(results):
                 print(results)
             case let .update(results, _, _, _):
-                //print(results, deletions, insertions, modifications)
+                // print(results, deletions, insertions, modifications)
                 DataStorage.shared.friendsArray.removeAll()
                 for user in results {
                     do {
                         let url = URL(string: user.mainPhoto)
                         let data = try Data(contentsOf: url!)
                         DataStorage.shared.friendsArray.append(User(name: user.name, mainPhoto: UIImage(data: data), photoArray: [UIImage(data: data)!], likes: 0, id: user.id))
-                    }
-                    catch{
+                    } catch {
                         print(error)
                     }
                 }
                 self.myTableView.reloadData()
-                
-            case .error(let error):
+
+            case let .error(error):
                 print(error)
             }
-
         }
-        
-        
-        VkApi().VKgetFriends(finished: {
 
+        VkApi().VKgetFriends(finished: {
             do {
                 let realm = try Realm()
                 let users = realm.objects(UserRealmObj.self)
                 for user in users {
-
                     do {
                         let url = URL(string: user.mainPhoto)
                         let data = try Data(contentsOf: url!)
                         DataStorage.shared.friendsArray.append(User(name: user.name, mainPhoto: UIImage(data: data), photoArray: [UIImage(data: data)!], likes: 0, id: user.id))
-                    }
-                    catch{
+                    } catch {
                         print(error)
                     }
                 }
@@ -147,63 +138,52 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
             self.filteredArray = []
             if self.searchBar.text == "" {
                 self.filteredArray = DataStorage.shared.friendsArray
-            }
-            else {
-                for item in DataStorage.shared.friendsArray{
-                    if item.name.lowercased().contains(self.searchBar.text?.lowercased() ??  ""){
+            } else {
+                for item in DataStorage.shared.friendsArray {
+                    if item.name.lowercased().contains(self.searchBar.text?.lowercased() ?? "") {
                         self.filteredArray.append(item)
                     }
                 }
             }
-            
 
             self.myTableView.reloadData()
             self.removeSpinner()
         })
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
         myTableView.addSubview(refreshControl) // not required when using UITableViewController
 
-    
-        
-
-        
         let nibFile = UINib(nibName: "CustomTableViewCell", bundle: nil)
-        
+
         myTableView.register(nibFile, forCellReuseIdentifier: "CustomTableViewCell")
         myTableView.reloadData()
-        let url = URL(string: "https://api.vk.com/method/groups.get?extended=1&access_token="+Session.shared.token+"&v=5.103&fields=photo_200,description,activity")
+        let url = URL(string: "https://api.vk.com/method/groups.get?extended=1&access_token=" + Session.shared.token + "&v=5.103&fields=photo_200,description,activity")
 
-        AF.request(url!,method: .get).responseData { response in
-            
+        AF.request(url!, method: .get).responseData { response in
+
             guard let data = response.value
-            else {return}
+            else { return }
             guard let newStr = String(data: data, encoding: .utf8)
-            else {return}
+            else { return }
             VkApi().VKGetId(finished: {
-                            self.ref.child(String(Session.shared.userId)).setValue(newStr)
-                
+                self.ref.child(String(Session.shared.userId)).setValue(newStr)
+
             })
         }
-        
-        
     }
-    @objc func refresh(_ sender: AnyObject) {
-        self.showSpinner()
-        VkApi().VKgetFriends(finished: {
 
+    @objc func refresh(_: AnyObject) {
+        showSpinner()
+        VkApi().VKgetFriends(finished: {
             do {
                 let realm = try Realm()
                 let users = realm.objects(UserRealmObj.self)
-                for user in users{
-
-                        
+                for user in users {
                     do {
                         let url = URL(string: user.mainPhoto)
                         let data = try Data(contentsOf: url!)
                         DataStorage.shared.friendsArray.append(User(name: user.name, mainPhoto: UIImage(data: data), photoArray: [UIImage(data: data)!], likes: 0, id: user.id))
-                    }
-                    catch{
+                    } catch {
                         print(error)
                     }
                 }
@@ -214,15 +194,13 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
             self.filteredArray = []
             if self.searchBar.text == "" {
                 self.filteredArray = DataStorage.shared.friendsArray
-            }
-            else {
-                for item in DataStorage.shared.friendsArray{
-                    if item.name.lowercased().contains(self.searchBar.text?.lowercased() ??  ""){
+            } else {
+                for item in DataStorage.shared.friendsArray {
+                    if item.name.lowercased().contains(self.searchBar.text?.lowercased() ?? "") {
                         self.filteredArray.append(item)
                     }
                 }
             }
-            
 
             self.myTableView.reloadData()
             self.removeSpinner()
@@ -230,94 +208,94 @@ class TableViewFriends: UIViewController, UISearchBarDelegate {
 
         refreshControl.endRefreshing()
     }
-    
 }
-extension TableViewFriends: UITableViewDataSource{
-    func numberOfSections(in tableView: UITableView) -> Int {
+
+extension TableViewFriends: UITableViewDataSource {
+    func numberOfSections(in _: UITableView) -> Int {
         let sections = sortAndGetSections()
         return sections.count
     }
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+
+    func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
         let sections = sortAndGetSections()
         var returnKey = ""
         var i = 0
-        for (key,_) in sections{
-            if i == section{
+        for (key, _) in sections {
+            if i == section {
                 returnKey = String(key)
             }
-            i+=1
+            i += 1
         }
-        
+
         return returnKey
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+    func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sections = sortAndGetSections()
         var i = 0
-        for (_,names) in sections{
-            if i == section{
+        for (_, names) in sections {
+            if i == section {
                 return names.count
             }
-            i+=1
+            i += 1
         }
         return 0
     }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let sections = sortAndGetSections()
         var i = 0
         var iStruct = 0
-        
-        for (_,names) in sections{
-            if i == indexPath.section{
+
+        for (_, names) in sections {
+            if i == indexPath.section {
                 break
-            }else{
+            } else {
                 iStruct += names.count
             }
-            i+=1
+            i += 1
         }
-        
-        
+
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell", for: indexPath) as! CustomTableViewCell
-        
-        cell.configure(title: filteredArray[iStruct+indexPath.row].name, description: filteredArray[iStruct+indexPath.row].status, image: filteredArray[iStruct+indexPath.row].mainPhoto)
-        
+
+        cell.configure(title: filteredArray[iStruct + indexPath.row].name, description: filteredArray[iStruct + indexPath.row].status, image: filteredArray[iStruct + indexPath.row].mainPhoto)
+
         return cell
-        
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let sections = sortAndGetSections()
         var i = 0
         var iStruct = 0
-        
-        for (_,names) in sections{
-            if i == indexPath.section{
+
+        for (_, names) in sections {
+            if i == indexPath.section {
                 break
-            }else{
+            } else {
                 iStruct += names.count
             }
-            i+=1
+            i += 1
         }
-        
-        self.photo = filteredArray[iStruct+indexPath.row].mainPhoto ?? UIImage(named: "unnamed")!
-        self.row = iStruct+indexPath.row
-        for (index,item) in DataStorage.shared.friendsArray.enumerated() {
-            if item.id == filteredArray[iStruct+indexPath.row].id {
-                self.row = index
+
+        photo = filteredArray[iStruct + indexPath.row].mainPhoto ?? UIImage(named: "unnamed")!
+        row = iStruct + indexPath.row
+        for (index, item) in DataStorage.shared.friendsArray.enumerated() {
+            if item.id == filteredArray[iStruct + indexPath.row].id {
+                row = index
             }
-            
         }
         performSegue(withIdentifier: "fromFriendsToPhoto", sender: nil)
     }
-    func searchBar(_ searchBar: UISearchBar,
-                   textDidChange searchText: String){
+
+    func searchBar(_: UISearchBar,
+                   textDidChange searchText: String)
+    {
         filteredArray = []
         if searchText == "" {
             filteredArray = DataStorage.shared.friendsArray
-        }
-        else {
-            for item in DataStorage.shared.friendsArray{
-                if item.name.lowercased().contains(searchText.lowercased()){
+        } else {
+            for item in DataStorage.shared.friendsArray {
+                if item.name.lowercased().contains(searchText.lowercased()) {
                     filteredArray.append(item)
                 }
             }
@@ -325,34 +303,33 @@ extension TableViewFriends: UITableViewDataSource{
         myTableView.reloadData()
     }
 }
-extension TableViewFriends: UITableViewDelegate{
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+extension TableViewFriends: UITableViewDelegate {
+    func tableView(_: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let sections = sortAndGetSections()
         var i = 0
         var iStruct = 0
-        
-        for (_,names) in sections{
-            if i == indexPath.section{
+
+        for (_, names) in sections {
+            if i == indexPath.section {
                 break
-            }else{
+            } else {
                 iStruct += names.count
             }
-            i+=1
+            i += 1
         }
-        let contextItem = UIContextualAction(style: .destructive, title: "Удалить") { [self]  (contextualAction, view, boolValue) in
-            for (index,item) in DataStorage.shared.friendsArray.enumerated() {
-                if item.id == filteredArray[iStruct+indexPath.row].id {
+        let contextItem = UIContextualAction(style: .destructive, title: "Удалить") { [self] _, _, _ in
+            for (index, item) in DataStorage.shared.friendsArray.enumerated() {
+                if item.id == filteredArray[iStruct + indexPath.row].id {
                     let user = DataStorage.shared.friendsArray[index]
                     DataStorage.shared.friendsArray.remove(at: index)
                     DataStorage.shared.usersArray.append(user)
                     filteredArray = []
                     if searchBar.text == "" {
                         filteredArray = DataStorage.shared.friendsArray
-                    }
-                    else {
-                        for item in DataStorage.shared.friendsArray{
-                            if item.name.lowercased().contains(searchBar.text?.lowercased() ?? ""){
+                    } else {
+                        for item in DataStorage.shared.friendsArray {
+                            if item.name.lowercased().contains(searchBar.text?.lowercased() ?? "") {
                                 filteredArray.append(item)
                             }
                         }
@@ -364,29 +341,25 @@ extension TableViewFriends: UITableViewDelegate{
             }
         }
         let swipeActions = UISwipeActionsConfiguration(actions: [contextItem])
-        
+
         return swipeActions
     }
-    
-    
 }
-fileprivate var aView: UIView?
+
+private var aView: UIView?
 extension TableViewFriends {
-    
     func showSpinner() {
-        aView = UIView(frame: self.view.bounds)
-        aView?.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+        aView = UIView(frame: view.bounds)
+        aView?.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
         let ai = UIActivityIndicatorView(style: .large)
         ai.center = aView!.center
         ai.startAnimating()
 
         aView?.addSubview(ai)
-        self.view.addSubview(aView!)
-        
-        
+        view.addSubview(aView!)
     }
-    
-    func removeSpinner(){
+
+    func removeSpinner() {
         aView!.removeFromSuperview()
         aView = nil
     }

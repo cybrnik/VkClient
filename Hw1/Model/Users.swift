@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-
 struct User {
     var name: String
     var mainPhoto: UIImage?
@@ -16,5 +15,4 @@ struct User {
     var status: String?
     var likes: Int
     var id: Int
-    
 }

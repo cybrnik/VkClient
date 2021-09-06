@@ -10,9 +10,9 @@
 import UIKit
 
 class TableViewUsers: UIViewController, UISearchBarDelegate {
-
-    @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var myTableView: UITableView!
+    @IBOutlet var searchBar: UISearchBar!
+    @IBOutlet var myTableView: UITableView!
+    var photoService: PhotoService?
     var photo = UIImage(named: "unnamed")!
     var row = Int()
     var type = "Users"
@@ -21,10 +21,9 @@ class TableViewUsers: UIViewController, UISearchBarDelegate {
         filteredArray = []
         if searchBar.text == "" {
             filteredArray = DataStorage.shared.usersArray
-        }
-        else {
-            for item in DataStorage.shared.usersArray{
-                if item.name.lowercased().contains(searchBar.text?.lowercased() ??  ""){
+        } else {
+            for item in DataStorage.shared.usersArray {
+                if item.name.lowercased().contains(searchBar.text?.lowercased() ?? "") {
                     filteredArray.append(item)
                 }
             }
@@ -32,8 +31,9 @@ class TableViewUsers: UIViewController, UISearchBarDelegate {
         super.viewWillAppear(animated)
         myTableView.reloadData()
     }
-    override func prepare(for segue: UIStoryboardSegue,sender: Any?){
-        if segue.identifier == "fromUsersToPhoto"{
+
+    override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
+        if segue.identifier == "fromUsersToPhoto" {
             guard let dst = segue.destination as? PhotoCollectionView else {
                 return
             }
@@ -42,34 +42,35 @@ class TableViewUsers: UIViewController, UISearchBarDelegate {
             dst.row = row
         }
     }
+
     func sortAndGetSections() -> [(letter: Character, names: [String])] {
         filteredArray.sort { (lhs: User, rhs: User) -> Bool in
-            return lhs.name < rhs.name
+            lhs.name < rhs.name
         }
 
         var users = [String]()
-        for item in filteredArray{
+        for item in filteredArray {
             users.append(item.name)
         }
-        let sections = Dictionary(grouping: users) { (country) -> Character in
-            return country.first!
-            }
-            .map { (key: Character, value: [String]) -> (letter: Character, names: [String]) in
-                (letter: key, names: value)
-            }
-            .sorted { (left, right) -> Bool in
-                left.letter < right.letter
-            }
+        let sections = Dictionary(grouping: users) { country -> Character in
+            country.first!
+        }
+        .map { (key: Character, value: [String]) -> (letter: Character, names: [String]) in
+            (letter: key, names: value)
+        }
+        .sorted { left, right -> Bool in
+            left.letter < right.letter
+        }
         return sections
     }
+
     override func viewDidLoad() {
         filteredArray = []
         if searchBar.text == "" {
             filteredArray = DataStorage.shared.usersArray
-        }
-        else {
-            for item in DataStorage.shared.usersArray{
-                if item.name.lowercased().contains(searchBar.text?.lowercased() ??  ""){
+        } else {
+            for item in DataStorage.shared.usersArray {
+                if item.name.lowercased().contains(searchBar.text?.lowercased() ?? "") {
                     filteredArray.append(item)
                 }
             }
@@ -77,103 +78,101 @@ class TableViewUsers: UIViewController, UISearchBarDelegate {
         super.viewDidLoad()
         searchBar.delegate = self
         myTableView.dataSource = self
-        
+
         let nibFile = UINib(nibName: "CustomTableViewCell", bundle: nil)
-        
+
         myTableView.register(nibFile, forCellReuseIdentifier: "CustomTableViewCell")
         myTableView.reloadData()
-
     }
-
-
 }
-extension TableViewUsers: UITableViewDataSource{
-    func numberOfSections(in tableView: UITableView) -> Int {
+
+extension TableViewUsers: UITableViewDataSource {
+    func numberOfSections(in _: UITableView) -> Int {
         let sections = sortAndGetSections()
         return sections.count
     }
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+
+    func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
         let sections = sortAndGetSections()
         var returnKey = ""
         var i = 0
-        for (key,_) in sections{
-            if i == section{
+        for (key, _) in sections {
+            if i == section {
                 returnKey = String(key)
             }
-            i+=1
+            i += 1
         }
-        
+
         return returnKey
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+    func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sections = sortAndGetSections()
         var i = 0
-        for (_,names) in sections{
-            if i == section{
+        for (_, names) in sections {
+            if i == section {
                 return names.count
             }
-            i+=1
+            i += 1
         }
         return 0
     }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let sections = sortAndGetSections()
         var i = 0
         var iStruct = 0
 
-        for (_,names) in sections{
-            if i == indexPath.section{
+        for (_, names) in sections {
+            if i == indexPath.section {
                 break
-            }else{
+            } else {
                 iStruct += names.count
             }
-            i+=1
+            i += 1
         }
-        
-        
+
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell", for: indexPath) as! CustomTableViewCell
-        
-        cell.configure(title: filteredArray[iStruct+indexPath.row].name, description: filteredArray[iStruct+indexPath.row].status, image: filteredArray[iStruct+indexPath.row].mainPhoto)
-        
+
+        cell.configure(title: filteredArray[iStruct + indexPath.row].name, description: filteredArray[iStruct + indexPath.row].status, image: filteredArray[iStruct + indexPath.row].mainPhoto)
+
         return cell
-        
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let sections = sortAndGetSections()
         var i = 0
         var iStruct = 0
 
-        for (_,names) in sections{
-            if i == indexPath.section{
+        for (_, names) in sections {
+            if i == indexPath.section {
                 break
-            }else{
+            } else {
                 iStruct += names.count
             }
-            i+=1
+            i += 1
         }
-        
-        self.photo = filteredArray[iStruct+indexPath.row].mainPhoto ?? UIImage(named: "unnamed")!
-        self.row = iStruct+indexPath.row
-        for (index,item) in DataStorage.shared.usersArray.enumerated() {
-            if item.id == filteredArray[iStruct+indexPath.row].id {
-                self.row = index
+
+        photo = filteredArray[iStruct + indexPath.row].mainPhoto ?? UIImage(named: "unnamed")!
+        row = iStruct + indexPath.row
+        for (index, item) in DataStorage.shared.usersArray.enumerated() {
+            if item.id == filteredArray[iStruct + indexPath.row].id {
+                row = index
             }
-            
         }
-        
+
         performSegue(withIdentifier: "fromUsersToPhoto", sender: nil)
     }
-    func searchBar(_ searchBar: UISearchBar,
-                   textDidChange searchText: String){
+
+    func searchBar(_: UISearchBar,
+                   textDidChange searchText: String)
+    {
         filteredArray = []
         if searchText == "" {
             filteredArray = DataStorage.shared.usersArray
-        }
-        else {
-            for item in DataStorage.shared.usersArray{
-                if item.name.lowercased().contains(searchText.lowercased()){
+        } else {
+            for item in DataStorage.shared.usersArray {
+                if item.name.lowercased().contains(searchText.lowercased()) {
                     filteredArray.append(item)
                 }
             }
@@ -181,34 +180,33 @@ extension TableViewUsers: UITableViewDataSource{
         myTableView.reloadData()
     }
 }
-extension TableViewUsers: UITableViewDelegate{
 
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+extension TableViewUsers: UITableViewDelegate {
+    func tableView(_: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let sections = sortAndGetSections()
         var i = 0
         var iStruct = 0
 
-        for (_,names) in sections{
-            if i == indexPath.section{
+        for (_, names) in sections {
+            if i == indexPath.section {
                 break
-            }else{
+            } else {
                 iStruct += names.count
             }
-            i+=1
+            i += 1
         }
-        let contextItem = UIContextualAction(style: .destructive, title: "Добавить") { [self]  (contextualAction, view, boolValue) in
-            for (index,item) in DataStorage.shared.usersArray.enumerated() {
-                if item.id == filteredArray[iStruct+indexPath.row].id {
+        let contextItem = UIContextualAction(style: .destructive, title: "Добавить") { [self] _, _, _ in
+            for (index, item) in DataStorage.shared.usersArray.enumerated() {
+                if item.id == filteredArray[iStruct + indexPath.row].id {
                     let user = DataStorage.shared.usersArray[index]
                     DataStorage.shared.usersArray.remove(at: index)
                     DataStorage.shared.friendsArray.append(user)
                     filteredArray = []
                     if searchBar.text == "" {
                         filteredArray = DataStorage.shared.usersArray
-                    }
-                    else {
-                        for item in DataStorage.shared.usersArray{
-                            if item.name.lowercased().contains(searchBar.text?.lowercased() ?? ""){
+                    } else {
+                        for item in DataStorage.shared.usersArray {
+                            if item.name.lowercased().contains(searchBar.text?.lowercased() ?? "") {
                                 filteredArray.append(item)
                             }
                         }
@@ -224,6 +222,4 @@ extension TableViewUsers: UITableViewDelegate{
 
         return swipeActions
     }
-
-
 }

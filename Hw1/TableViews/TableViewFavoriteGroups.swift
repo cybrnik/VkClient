@@ -5,23 +5,22 @@
 //  Created by Nikita on 15.04.2021.
 //
 
-import UIKit
 import RealmSwift
-class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
-    
+import UIKit
+class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate {
     var token: NotificationToken?
     var filteredArray = DataStorage.shared.favoriteGroupsArray
-    @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var myTableView: UITableView!
+    @IBOutlet var searchBar: UISearchBar!
+    @IBOutlet var myTableView: UITableView!
     var refreshControl = UIRefreshControl()
+    var photoService: PhotoService?
     override func viewWillAppear(_ animated: Bool) {
         filteredArray = []
         if searchBar.text == "" {
             filteredArray = DataStorage.shared.favoriteGroupsArray
-        }
-        else {
-            for item in DataStorage.shared.favoriteGroupsArray{
-                if item.name.lowercased().contains(searchBar.text?.lowercased() ??  ""){
+        } else {
+            for item in DataStorage.shared.favoriteGroupsArray {
+                if item.name.lowercased().contains(searchBar.text?.lowercased() ?? "") {
                     filteredArray.append(item)
                 }
             }
@@ -29,37 +28,35 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
         super.viewWillAppear(animated)
         myTableView.reloadData()
     }
+
     func sortAndGetSections() -> [(letter: Character, names: [String])] {
         filteredArray.sort { (lhs: Group, rhs: Group) -> Bool in
-            return lhs.name < rhs.name
+            lhs.name < rhs.name
         }
 
         var users = [String]()
-        for item in filteredArray{
+        for item in filteredArray {
             users.append(item.name)
         }
-        let sections = Dictionary(grouping: users) { (country) -> Character in
-            return country.first!
-            }
-            .map { (key: Character, value: [String]) -> (letter: Character, names: [String]) in
-                (letter: key, names: value)
-            }
-            .sorted { (left, right) -> Bool in
-                left.letter < right.letter
-            }
+        let sections = Dictionary(grouping: users) { country -> Character in
+            country.first!
+        }
+        .map { (key: Character, value: [String]) -> (letter: Character, names: [String]) in
+            (letter: key, names: value)
+        }
+        .sorted { left, right -> Bool in
+            left.letter < right.letter
+        }
         return sections
     }
+
     override func viewDidLoad() {
-        
-        
-        
         filteredArray = []
         if searchBar.text == "" {
             filteredArray = DataStorage.shared.favoriteGroupsArray
-        }
-        else {
-            for item in DataStorage.shared.favoriteGroupsArray{
-                if item.name.lowercased().contains(searchBar.text?.lowercased() ??  ""){
+        } else {
+            for item in DataStorage.shared.favoriteGroupsArray {
+                if item.name.lowercased().contains(searchBar.text?.lowercased() ?? "") {
                     filteredArray.append(item)
                 }
             }
@@ -68,50 +65,46 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
         searchBar.delegate = self
         myTableView.dataSource = self
         myTableView.delegate = self
-        self.showSpinner()
+        showSpinner()
         let realm = try! Realm()
         let groupsRlm = realm.objects(GroupRealmObj.self)
-        self.token = groupsRlm.observe {(changes: RealmCollectionChange) in
+        token = groupsRlm.observe { (changes: RealmCollectionChange) in
             switch changes {
-            case .initial(let results):
+            case let .initial(results):
                 print(results)
             case let .update(results, _, _, _):
-                //print(results, deletions, insertions, modifications)
+                // print(results, deletions, insertions, modifications)
                 DataStorage.shared.favoriteGroupsArray.removeAll()
                 for group in results {
-
-                    do {
-                        let url = URL(string: group.mainPhoto)
-                        let data = try Data(contentsOf: url!)
-                        DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description:group.groupDescription, mainPhoto: UIImage(data: data), id: group.id))
-                    }
-                    catch{
-                        print(error)
-                    }
+//                    do {
+                    ////                        let url = URL(string: group.mainPhoto)
+//                        let data = try Data(contentsOf: url!)
+                    DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description: group.groupDescription, mainPhoto: self.photoService?.photo(byUrl: group.mainPhoto), id: group.id))
+//                    }
+//                    catch{
+//                        print(error)
+//                    }
                 }
                 self.myTableView.reloadData()
-                
-            case .error(let error):
+
+            case let .error(error):
                 print(error)
             }
-
         }
 
-        
-        VkApi().VKgetGroups (finished: {
+        VkApi().VKgetGroups(finished: {
             do {
                 let realm = try Realm()
                 let groups = realm.objects(GroupRealmObj.self)
                 for group in groups {
-
-                    do {
-                        let url = URL(string: group.mainPhoto)
-                        let data = try Data(contentsOf: url!)
-                        DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description:group.groupDescription, mainPhoto: UIImage(data: data), id: group.id))
-                    }
-                    catch{
-                        print(error)
-                    }
+//                    do {
+                    //                        let url = URL(string: group.mainPhoto)
+                    //                        let data = try Data(contentsOf: url!)
+                    DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description: group.groupDescription, mainPhoto: self.photoService?.photo(byUrl: group.mainPhoto), id: group.id))
+//                    }
+//                    catch{
+//                        print(error)
+//                    }
                 }
             } catch {
                 print(error)
@@ -119,44 +112,42 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
             self.filteredArray = []
             if self.searchBar.text == "" {
                 self.filteredArray = DataStorage.shared.favoriteGroupsArray
-            }
-            else {
+            } else {
                 for item in DataStorage.shared.favoriteGroupsArray {
-                    if item.name.lowercased().contains(self.searchBar.text?.lowercased() ??  ""){
+                    if item.name.lowercased().contains(self.searchBar.text?.lowercased() ?? "") {
                         self.filteredArray.append(item)
                     }
                 }
             }
-            
 
             self.myTableView.reloadData()
             self.removeSpinner()
         })
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        refreshControl.addTarget(self, action: #selector(self.refresh(_:)), for: .valueChanged)
+        refreshControl.addTarget(self, action: #selector(refresh(_:)), for: .valueChanged)
         myTableView.addSubview(refreshControl) // not required when using UITableViewController
-        
+
         let nibFile = UINib(nibName: "CustomTableViewCell", bundle: nil)
-        
+
         myTableView.register(nibFile, forCellReuseIdentifier: "CustomTableViewCell")
         myTableView.reloadData()
     }
-    @objc func refresh(_ sender: AnyObject) {
-        self.showSpinner()
-        VkApi().VKgetGroups (finished: {
+
+    @objc func refresh(_: AnyObject) {
+        showSpinner()
+        VkApi().VKgetGroups(finished: {
             do {
                 let realm = try Realm()
                 let groups = realm.objects(GroupRealmObj.self)
                 for group in groups {
-
-                    do {
-                        let url = URL(string: group.mainPhoto)
-                        let data = try Data(contentsOf: url!)
-                        DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description:group.groupDescription, mainPhoto: UIImage(data: data), id: group.id))
-                    }
-                    catch{
-                        print(error)
-                    }
+                    //                    do {
+                    //                        let url = URL(string: group.mainPhoto)
+                    //                        let data = try Data(contentsOf: url!)
+                    DataStorage.shared.favoriteGroupsArray.append(Group(name: group.name, description: group.groupDescription, mainPhoto: self.photoService?.photo(byUrl: group.mainPhoto), id: group.id))
+                    //                    }
+                    //                    catch{
+                    //                        print(error)
+                    //                    }
                 }
             } catch {
                 print(error)
@@ -164,15 +155,13 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
             self.filteredArray = []
             if self.searchBar.text == "" {
                 self.filteredArray = DataStorage.shared.favoriteGroupsArray
-            }
-            else {
+            } else {
                 for item in DataStorage.shared.favoriteGroupsArray {
-                    if item.name.lowercased().contains(self.searchBar.text?.lowercased() ??  ""){
+                    if item.name.lowercased().contains(self.searchBar.text?.lowercased() ?? "") {
                         self.filteredArray.append(item)
                     }
                 }
             }
-            
 
             self.myTableView.reloadData()
             self.removeSpinner()
@@ -180,106 +169,104 @@ class TableViewFavoriteGroups: UIViewController, UISearchBarDelegate  {
 
         refreshControl.endRefreshing()
     }
-    
 }
+
 extension TableViewFavoriteGroups: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
+    func numberOfSections(in _: UITableView) -> Int {
         let sections = sortAndGetSections()
         return sections.count
     }
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+
+    func tableView(_: UITableView, titleForHeaderInSection section: Int) -> String? {
         let sections = sortAndGetSections()
         var returnKey = ""
         var i = 0
-        for (key,_) in sections{
-            if i == section{
+        for (key, _) in sections {
+            if i == section {
                 returnKey = String(key)
             }
-            i+=1
+            i += 1
         }
-        
+
         return returnKey
     }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+    func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sections = sortAndGetSections()
         var i = 0
-        for (_,names) in sections{
-            if i == section{
+        for (_, names) in sections {
+            if i == section {
                 return names.count
             }
-            i+=1
+            i += 1
         }
         return 0
     }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let sections = sortAndGetSections()
         var i = 0
         var iStruct = 0
 
-        for (_,names) in sections{
-            if i == indexPath.section{
+        for (_, names) in sections {
+            if i == indexPath.section {
                 break
-            }else{
+            } else {
                 iStruct += names.count
             }
-            i+=1
+            i += 1
         }
-        
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell", for: indexPath) as! CustomTableViewCell
-        
-        cell.configure(title: filteredArray[iStruct+indexPath.row].name, description: filteredArray[iStruct+indexPath.row].description, image: filteredArray[iStruct+indexPath.row].mainPhoto)
-        
-        return cell
-        
-    }
-    func searchBar(_ searchBar: UISearchBar,
-                   textDidChange searchText: String){
 
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomTableViewCell", for: indexPath) as! CustomTableViewCell
+
+        cell.configure(title: filteredArray[iStruct + indexPath.row].name, description: filteredArray[iStruct + indexPath.row].description, image: filteredArray[iStruct + indexPath.row].mainPhoto)
+
+        return cell
+    }
+
+    func searchBar(_: UISearchBar,
+                   textDidChange searchText: String)
+    {
         filteredArray = []
         if searchText == "" {
             filteredArray = DataStorage.shared.favoriteGroupsArray
-        }
-        else {
-            for item in DataStorage.shared.favoriteGroupsArray{
-                if item.name.lowercased().contains(searchText.lowercased()){
+        } else {
+            for item in DataStorage.shared.favoriteGroupsArray {
+                if item.name.lowercased().contains(searchText.lowercased()) {
                     filteredArray.append(item)
                 }
             }
         }
         myTableView.reloadData()
     }
-
-
 }
-extension TableViewFavoriteGroups: UITableViewDelegate{
 
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+extension TableViewFavoriteGroups: UITableViewDelegate {
+    func tableView(_: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let sections = sortAndGetSections()
         var i = 0
         var iStruct = 0
 
-        for (_,names) in sections{
-            if i == indexPath.section{
+        for (_, names) in sections {
+            if i == indexPath.section {
                 break
-            }else{
+            } else {
                 iStruct += names.count
             }
-            i+=1
+            i += 1
         }
-        let contextItem = UIContextualAction(style: .destructive, title: "Удалить") { [self]  (contextualAction, view, boolValue) in
-            for (index,item) in DataStorage.shared.favoriteGroupsArray.enumerated() {
-                if item.id == filteredArray[iStruct+indexPath.row].id {
+        let contextItem = UIContextualAction(style: .destructive, title: "Удалить") { [self] _, _, _ in
+            for (index, item) in DataStorage.shared.favoriteGroupsArray.enumerated() {
+                if item.id == filteredArray[iStruct + indexPath.row].id {
                     let user = DataStorage.shared.favoriteGroupsArray[index]
                     DataStorage.shared.favoriteGroupsArray.remove(at: index)
                     DataStorage.shared.groupsArray.append(user)
                     filteredArray = []
                     if searchBar.text == "" {
                         filteredArray = DataStorage.shared.favoriteGroupsArray
-                    }
-                    else {
-                        for item in DataStorage.shared.favoriteGroupsArray{
-                            if item.name.lowercased().contains(searchBar.text?.lowercased() ?? ""){
+                    } else {
+                        for item in DataStorage.shared.favoriteGroupsArray {
+                            if item.name.lowercased().contains(searchBar.text?.lowercased() ?? "") {
                                 filteredArray.append(item)
                             }
                         }
@@ -289,35 +276,27 @@ extension TableViewFavoriteGroups: UITableViewDelegate{
                     break
                 }
             }
-            
-
         }
         let swipeActions = UISwipeActionsConfiguration(actions: [contextItem])
 
         return swipeActions
     }
-
-
 }
 
-
-fileprivate var aView: UIView?
+private var aView: UIView?
 extension TableViewFavoriteGroups {
-    
     func showSpinner() {
-        aView = UIView(frame: self.view.bounds)
-        aView?.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
+        aView = UIView(frame: view.bounds)
+        aView?.backgroundColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
         let ai = UIActivityIndicatorView(style: .large)
         ai.center = aView!.center
         ai.startAnimating()
 
         aView?.addSubview(ai)
-        self.view.addSubview(aView!)
-        
-        
+        view.addSubview(aView!)
     }
-    
-    func removeSpinner(){
+
+    func removeSpinner() {
         aView!.removeFromSuperview()
         aView = nil
     }

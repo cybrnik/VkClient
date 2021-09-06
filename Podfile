@@ -11,4 +11,5 @@ target 'Hw1' do
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
   pod 'SwiftyJSON'
+  pod 'PromiseKit'
 end

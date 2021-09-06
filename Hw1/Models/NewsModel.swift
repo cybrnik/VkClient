@@ -17,11 +17,13 @@
 import Foundation
 
 // MARK: - News
+
 struct NewsModel: Codable {
     let response: ResponseNews
 }
 
 // MARK: - Response
+
 struct ResponseNews: Codable {
     let items: [ResponseItem]
     let profiles: [Profile]
@@ -35,6 +37,7 @@ struct ResponseNews: Codable {
 }
 
 // MARK: - Group
+
 struct GroupNews: Codable {
     let id: Int
     let name, screenName: String
@@ -54,11 +57,12 @@ struct GroupNews: Codable {
 }
 
 enum GroupType: String, Codable {
-    case group = "group"
-    case page = "page"
+    case group
+    case page
 }
 
 // MARK: - ResponseItem
+
 struct ResponseItem: Codable {
     let sourceID, date: Int
     let canDoubtCategory, canSetCategory: Bool?
@@ -96,6 +100,7 @@ struct ResponseItem: Codable {
 }
 
 // MARK: - Attachment
+
 struct Attachment: Codable {
     let type: AttachmentType
     let photo: LinkPhoto?
@@ -105,6 +110,7 @@ struct Attachment: Codable {
 }
 
 // MARK: - Doc
+
 struct Doc: Codable {
     let id, ownerID: Int
     let title: String
@@ -124,17 +130,20 @@ struct Doc: Codable {
 }
 
 // MARK: - Preview
+
 struct Preview: Codable {
     let photo: PreviewPhoto
     let video: VideoElement
 }
 
 // MARK: - PreviewPhoto
+
 struct PreviewPhoto: Codable {
     let sizes: [VideoElement]
 }
 
 // MARK: - VideoElement
+
 struct VideoElement: Codable {
     let src: String?
     let width, height: Int
@@ -152,21 +161,22 @@ struct VideoElement: Codable {
 }
 
 enum SizeType: String, Codable {
-    case d = "d"
-    case i = "i"
-    case m = "m"
-    case o = "o"
-    case p = "p"
-    case q = "q"
-    case r = "r"
-    case s = "s"
-    case w = "w"
-    case x = "x"
-    case y = "y"
-    case z = "z"
+    case d
+    case i
+    case m
+    case o
+    case p
+    case q
+    case r
+    case s
+    case w
+    case x
+    case y
+    case z
 }
 
 // MARK: - Link
+
 struct Link: Codable {
     let url: String
     let title: String
@@ -183,18 +193,21 @@ struct Link: Codable {
 }
 
 // MARK: - Button
+
 struct Button: Codable {
     let title: String
     let action: Action
 }
 
 // MARK: - Action
+
 struct Action: Codable {
     let type: String
     let url: String
 }
 
 // MARK: - LinkPhoto
+
 struct LinkPhoto: Codable {
     let albumID, date, id, ownerID: Int
     let hasTags: Bool
@@ -217,13 +230,14 @@ struct LinkPhoto: Codable {
 }
 
 enum AttachmentType: String, Codable {
-    case doc = "doc"
-    case link = "link"
-    case photo = "photo"
-    case video = "video"
+    case doc
+    case link
+    case photo
+    case video
 }
 
 // MARK: - AttachmentVideo
+
 struct AttachmentVideo: Codable {
     let accessKey: String
     let canComment, canLike, canRepost, canSubscribe: Int
@@ -260,6 +274,7 @@ struct AttachmentVideo: Codable {
 }
 
 // MARK: - Comments
+
 struct Comments: Codable {
     let count, canPost: Int
     let groupsCanPost: Bool?
@@ -272,12 +287,14 @@ struct Comments: Codable {
 }
 
 // MARK: - Friends
+
 struct Friends: Codable {
     let count: Int
     let items: [FriendsItem]
 }
 
 // MARK: - FriendsItem
+
 struct FriendsItem: Codable {
     let userID: Int
 
@@ -287,6 +304,7 @@ struct FriendsItem: Codable {
 }
 
 // MARK: - PurpleLikes
+
 struct PurpleLikes: Codable {
     let count, userLikes, canLike, canPublish: Int
 
@@ -299,12 +317,14 @@ struct PurpleLikes: Codable {
 }
 
 // MARK: - Photos
+
 struct Photos: Codable {
     let count: Int
     let items: [PhotosItem]
 }
 
 // MARK: - PhotosItem
+
 struct PhotosItem: Codable {
     let albumID, date, id, ownerID: Int
     let hasTags: Bool
@@ -334,11 +354,13 @@ struct PhotosItem: Codable {
 }
 
 // MARK: - Views
+
 struct Views: Codable {
     let count: Int
 }
 
 // MARK: - FluffyLikes
+
 struct FluffyLikes: Codable {
     let userLikes, count: Int
 
@@ -349,6 +371,7 @@ struct FluffyLikes: Codable {
 }
 
 // MARK: - Reposts
+
 struct Reposts: Codable {
     let count, userReposted: Int
 
@@ -359,22 +382,24 @@ struct Reposts: Codable {
 }
 
 // MARK: - PostSource
+
 struct PostSource: Codable {
     let type: PostSourceType
 }
 
 enum PostSourceType: String, Codable {
-    case api = "api"
-    case vk = "vk"
+    case api
+    case vk
 }
 
 enum PostTypeEnum: String, Codable {
-    case friend = "friend"
-    case post = "post"
+    case friend
+    case post
     case wallPhoto = "wall_photo"
 }
 
 // MARK: - Profile
+
 struct Profile: Codable {
     let firstName: String
     let id: Int
@@ -405,6 +430,7 @@ struct Profile: Codable {
 }
 
 // MARK: - OnlineInfo
+
 struct OnlineInfo: Codable {
     let visible: Bool
     let isOnline, isMobile: Bool?
